@@ -8,14 +8,26 @@
 
 function banner() {
   echo -e "\e[1;32m
-
-     ॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐ 
-    ॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐ 
-   ॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐ 
-  ॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐ  
- ॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐ   
-ॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐ    
-  \e[0m"
+                                           
+     OOOOOOOOO                             
+   OO:::::::::OO                           
+ OO:::::::::::::OO                         
+O:::::::OOO:::::::O                        
+O::::::O   O::::::O   mmmmmmm    mmmmmmm   
+O:::::O     O:::::O mm:::::::m  m:::::::mm 
+O:::::O     O:::::Om::::::::::mm::::::::::m
+O:::::O     O:::::Om::::::::::::::::::::::m
+O:::::O     O:::::Om:::::mmm::::::mmm:::::m
+O:::::O     O:::::Om::::m   m::::m   m::::m
+O:::::O     O:::::Om::::m   m::::m   m::::m
+O::::::O   O::::::Om::::m   m::::m   m::::m
+O:::::::OOO:::::::Om::::m   m::::m   m::::m
+ OO:::::::::::::OO m::::m   m::::m   m::::m
+   OO:::::::::OO   m::::m   m::::m   m::::m
+     OOOOOOOOO     mmmmmm   mmmmmm   mmmmmm
+                                           
+                                           
+\e[0m"
 }
 
 function check_root() {
@@ -23,7 +35,7 @@ function check_root() {
     echo -e "\e[1;31mThis tool requires root privileges for optimal functionality.\e[0m"
     read -p "Do you want to run it with sudo? (y/n) " choice
     if [[ $choice == "y" || $choice == "Y" ]]; then
-      sudo "<span class="math-inline">0" "</span>@"
+      sudo bash "$0"
       exit
     else
       echo -e "\e[1;33mSome tools might have limited functionality without root access.\e[0m"
@@ -41,29 +53,32 @@ function check_tools() {
   for tool in "${tools[@]}"; do
     if ! command -v "$tool" &> /dev/null; then
       echo -e "\e[1;33m$tool not found. Installing...\e[0m"
-      apt install -y "<span class="math-inline">tool"
-fi
-done
-\}
-function get\_target\(\) \{  \# Corrected function definition
-read \-p "Enter website or IP address\: " target
-\}
-function create\_directories\(\) \{
-mkdir \-p "om\_results"
-for tool in "</span>{tools[@]}"; do
+      apt install -y "$tool"
+    fi
+  done
+}
+
+function get_target() {
+  read -p "Enter website or IP address: " target
+}
+
+function create_directories() {
+  mkdir -p "om_results"
+  for tool in "${tools[@]}"; do
     mkdir -p "om_results/$tool/$target"
   done
 }
 
 function get_recon_level() {
   local default_level="high"
-  read -p "Enter desired reconnaissance level (low, medium, high) [default: <span class="math-inline">default\_level\]\: " level
-level\=</span>{level:-$default_level} 
-  echo "<span class="math-inline">level"
-\}
-function run\_scans\(\) \{
-echo \-e "\\e\[1;34mRunning reconnaissance scans\.\.\.\\e\[0m"
-recon\_level\=</span>(get_recon_level)
+  read -p "Enter desired reconnaissance level (low, medium, high) [default: $default_level]: " level
+  level=${level:-$default_level} 
+  echo "$level"
+}
+
+function run_scans() {
+  echo -e "\e[1;34mRunning reconnaissance scans...\e[0m"
+  recon_level=$(get_recon_level)
 
   # Nmap
   case $recon_level in
@@ -149,4 +164,16 @@ recon\_level\=</span>(get_recon_level)
   case $recon_level in
     low) theharvester -d "$target" -l 100 -b google > "om_results/theharvester/$target/theharvester_scan.txt" ;; 
     medium) theharvester -d "$target" -l 500 -b google > "om_results/theharvester/$target/theharvester_scan.txt" ;;
-    high) theharvester -d "$target
+    high) theharvester -d "$target" -l 1000 -b google,bing,linkedin > "om_results/theharvester/$target/theharvester_scan.txt" ;;
+  esac
+  echo "theharvester_$recon_level is running..."
+}
+
+# --- Main Script Execution ---
+banner
+check_root
+update_system
+check_tools
+get_target
+create_directories
+run_scans
