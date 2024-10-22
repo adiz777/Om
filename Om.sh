@@ -45,7 +45,7 @@ function check_tools() {
 fi
 done
 \}
-function get\_target\(\) \{
+function get\_target\(\) \{  \# Corrected function definition
 read \-p "Enter website or IP address\: " target
 \}
 function create\_directories\(\) \{
@@ -149,4 +149,4 @@ recon\_level\=</span>(get_recon_level)
   case $recon_level in
     low) theharvester -d "$target" -l 100 -b google > "om_results/theharvester/$target/theharvester_scan.txt" ;; 
     medium) theharvester -d "$target" -l 500 -b google > "om_results/theharvester/$target/theharvester_scan.txt" ;;
-    high) the
+    high) theharvester -d "$target
