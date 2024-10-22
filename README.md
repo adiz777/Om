@@ -28,7 +28,7 @@ Om is a minimalist reconnaissance tool for Kali Linux and other Linux distributi
 
 **Usage:**
 
-1. Run the tool: `sudo ./om.sh` (or `./om.sh` if not using sudo)
+1. Run the tool: `sudo ./Om.sh` (or `./Om.sh` if not using sudo)
 2. Enter the target website or IP address when prompted.
 3. Select the desired reconnaissance level (low, medium, or high).
 
