@@ -1,8 +1,8 @@
-# OM - Reconnaissance Script
+# OM - Automated Reconnaissance Tool
 
 **Description:**
 
-OM is a minimalist reconnaissance script for Kali Linux designed to automate the execution of various command-line reconnaissance tools. It provides a streamlined approach to information gathering, helping security professionals and enthusiasts perform efficient and comprehensive reconnaissance.
+OM is a minimalist reconnaissance script designed to automate the execution of various command-line reconnaissance tools. It provides a streamlined approach to information gathering, helping security professionals and enthusiasts perform efficient and comprehensive reconnaissance on Kali Linux and other Linux environments.
 
 **Features:**
 
@@ -13,11 +13,12 @@ OM is a minimalist reconnaissance script for Kali Linux designed to automate the
 * **Easy to Use:**  Simple execution with minimal user interaction.
 * **Configurable Reconnaissance Levels:** Allows you to choose between low, medium, and high reconnaissance levels, adjusting the intensity of the scans.
 
-**Requirements:**
+**Minimum Requirements:**
 
-* Kali Linux
-* Root privileges
-* Internet connection
+* **Operating System:** Kali Linux or other Linux distributions (e.g., Parrot OS, BlackArch, Debian, Ubuntu)
+* **Shell:** Bash
+* **Privileges:** Root privileges (recommended for optimal functionality)
+* **Connectivity:**  Internet connection
 
 **Installation:**
 
@@ -30,7 +31,7 @@ OM is a minimalist reconnaissance script for Kali Linux designed to automate the
 
 **Usage:**
 
-1. Run the script: `sudo ./om.sh`
+1. Run the script: `sudo ./om.sh` (or `./om.sh` if not using sudo)
 2. Enter the target website or IP address when prompted.
 3. Select the desired reconnaissance level (low, medium, or high).
 
