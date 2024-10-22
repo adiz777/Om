@@ -2,7 +2,7 @@
 
 **Description:**
 
-OM is a minimalist reconnaissance script designed to automate the execution of various command-line reconnaissance tools. It provides a streamlined approach to information gathering, helping security professionals and enthusiasts perform efficient and comprehensive reconnaissance on Kali Linux and other Linux environments.
+OM is a minimalist reconnaissance tool for Kali Linux and other Linux distributions designed to automate the execution of various command-line reconnaissance tools. It provides a streamlined approach to information gathering, helping security professionals and enthusiasts perform efficient and comprehensive reconnaissance.
 
 **Features:**
 
@@ -23,7 +23,7 @@ OM is a minimalist reconnaissance script designed to automate the execution of v
 **Installation:**
 
 1. Clone the repository: `git clone https://github.com/Adiz777/om.git`
-2. Make the script executable: `chmod +x om.sh`
+2. Make the tool executable: `chmod +x om.sh`
 3. Install the required tools: 
 
    *  Using apt: `sudo apt update && sudo apt install -y nmap netdiscover zenmap angryip masscan dnsrecon dig host fierce whatweb nikto dirb wpscan theharvester maltego recon-ng`
@@ -31,13 +31,13 @@ OM is a minimalist reconnaissance script designed to automate the execution of v
 
 **Usage:**
 
-1. Run the script: `sudo ./om.sh` (or `./om.sh` if not using sudo)
+1. Run the tool: `sudo ./om.sh` (or `./om.sh` if not using sudo)
 2. Enter the target website or IP address when prompted.
 3. Select the desired reconnaissance level (low, medium, or high).
 
 **Disclaimer:**
 
-This script is intended for educational and ethical use only. Use it responsibly and only on systems you have permission to scan. Unauthorized scanning is illegal and unethical.
+This tool is intended for educational and ethical use only. Use it responsibly and only on systems you have permission to scan. Unauthorized scanning is illegal and unethical.
 
 **Contributing:**
 
