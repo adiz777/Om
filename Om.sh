@@ -141,9 +141,4 @@ recon\_level\=</span>(get_recon_level)
   case $recon_level in
     low) theharvester -d "$target" -l 100 -b google > "om_results/theharvester/$target/theharvester_scan.txt" ;; 
     medium) theharvester -d "$target" -l 500 -b google > "om_results/theharvester/$target/theharvester_scan.txt" ;;
-    high) theharvester -d "$target" -l 1000 -b google,bing,linkedin > "om_results/theharvester/$target/theharvester_scan.txt" ;; 
-  esac
-  echo "theharvester_$recon_level is running..."
-}
-
-function generate_html_report()
+    high) theharvester -d "$target" -l 1000 -b google,bing,linkedin > "om_results/thehar
