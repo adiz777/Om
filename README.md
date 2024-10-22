@@ -24,7 +24,6 @@ Om is a minimalist reconnaissance tool for Kali Linux and other Linux distributi
 
 1. Clone the repository: `git clone https://github.com/Adiz777/om.git`
 2. Make the tool executable: `chmod +x om.sh`
-3. Install the required tools: 
 
 
 **Usage:**
