@@ -42,4 +42,8 @@ This script is intended for educational and ethical use only. Use it responsibly
 
 Contributions are welcome! Feel free to open issues or submit pull requests.
 
+**Future Updates:**
+
+* **Attack Mode:**  An attack mode is planned for future releases, allowing for automated exploitation of discovered vulnerabilities.
+
 **Created by MAJOR_ADI ❤️**
