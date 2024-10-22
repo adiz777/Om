@@ -8,7 +8,7 @@
 
 function banner() {
   echo -e "\e[1;32m
-                                   
+
      ॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐ 
     ॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐ 
    ॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐॐ 
@@ -149,4 +149,4 @@ recon\_level\=</span>(get_recon_level)
   case $recon_level in
     low) theharvester -d "$target" -l 100 -b google > "om_results/theharvester/$target/theharvester_scan.txt" ;; 
     medium) theharvester -d "$target" -l 500 -b google > "om_results/theharvester/$target/theharvester_scan.txt" ;;
-    high) theharvester -d "$target" -
+    high) theharvester -d "$target" -l 1
