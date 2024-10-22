@@ -26,7 +26,6 @@ Om is a minimalist reconnaissance tool for Kali Linux and other Linux distributi
 2. Make the tool executable: `chmod +x om.sh`
 3. Install the required tools: 
 
-   *  Using apt: `sudo apt update && sudo apt install -y nmap netdiscover zenmap angryip masscan dnsrecon dig host fierce whatweb nikto dirb wpscan theharvester maltego recon-ng`
 
 **Usage:**
 
