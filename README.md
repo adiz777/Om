@@ -27,7 +27,6 @@ OM is a minimalist reconnaissance tool for Kali Linux and other Linux distributi
 3. Install the required tools: 
 
    *  Using apt: `sudo apt update && sudo apt install -y nmap netdiscover zenmap angryip masscan dnsrecon dig host fierce whatweb nikto dirb wpscan theharvester maltego recon-ng`
-   *  Using pip: `sudo pip install -r requirements.txt` (This might not install all tools, as some are system packages)
 
 **Usage:**
 
