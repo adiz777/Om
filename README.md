@@ -1,8 +1,8 @@
-# OM - Automated Reconnaissance Tool
+# Om - Automated Reconnaissance Tool
 
 **Description:**
 
-OM is a minimalist reconnaissance tool for Kali Linux and other Linux distributions designed to automate the execution of various command-line reconnaissance tools. It provides a streamlined approach to information gathering, helping security professionals and enthusiasts perform efficient and comprehensive reconnaissance.
+Om is a minimalist reconnaissance tool for Kali Linux and other Linux distributions designed to automate the execution of various command-line reconnaissance tools. It provides a streamlined approach to information gathering, helping security professionals and enthusiasts perform efficient and comprehensive reconnaissance.
 
 **Features:**
 
