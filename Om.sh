@@ -19,18 +19,26 @@ function banner() {
 }
 
 function check_root() {
-  if [[ <span class="math-inline">EUID \-ne 0 \]\]; then
-echo \-e "\\e\[1;31mThis tool requires root privileges for optimal functionality\. Please run with sudo\.\\e\[0m"
-\#exit 1  \# Do not exit, allow to continue with potential limitations
-fi
-\}
-function update\_system\(\) \{
-echo \-e "\\e\[1;34mUpdating system\.\.\.\\e\[0m"
-apt update \-y && apt upgrade \-y
-\}
-function check\_tools\(\) \{
-tools\=\(nmap netdiscover zenmap angryip masscan dnsrecon dig host fierce whatweb nikto dirb wpscan theharvester maltego recon\-ng\)
-for tool in "</span>{tools[@]}"; do
+  if [[ $EUID -ne 0 ]]; then
+    echo -e "\e[1;31mThis tool requires root privileges for optimal functionality.\e[0m"
+    read -p "Do you want to run it with sudo? (y/n) " choice
+    if [[ $choice == "y" || $choice == "Y" ]]; then
+      sudo "<span class="math-inline">0" "</span>@"
+      exit
+    else
+      echo -e "\e[1;33mSome tools might have limited functionality without root access.\e[0m"
+    fi
+  fi
+}
+
+function update_system() {
+  echo -e "\e[1;34mUpdating system...\e[0m"
+  apt update -y && apt upgrade -y
+}
+
+function check_tools() {
+  tools=(nmap netdiscover zenmap angryip masscan dnsrecon dig host fierce whatweb nikto dirb wpscan theharvester maltego recon-ng)
+  for tool in "${tools[@]}"; do
     if ! command -v "$tool" &> /dev/null; then
       echo -e "\e[1;33m$tool not found. Installing...\e[0m"
       apt install -y "<span class="math-inline">tool"
@@ -141,4 +149,4 @@ recon\_level\=</span>(get_recon_level)
   case $recon_level in
     low) theharvester -d "$target" -l 100 -b google > "om_results/theharvester/$target/theharvester_scan.txt" ;; 
     medium) theharvester -d "$target" -l 500 -b google > "om_results/theharvester/$target/theharvester_scan.txt" ;;
-    high) theharvester -d "$target" -l 1000 -b google,bing,linkedin > "om_results/thehar
+    high) theharvester -d "$target" -
