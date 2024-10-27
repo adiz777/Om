@@ -8,25 +8,25 @@
 
 function banner() {
   echo -e "\e[1;32m
-                                           
-     OOOOOOOOO                             
-   OO:::::::::OO                           
- OO:::::::::::::OO                         
-O:::::::OOO:::::::O                        
-O::::::O   O::::::O   mmmmmmm    mmmmmmm   
-O:::::O     O:::::O mm:::::::m  m:::::::mm 
-O:::::O     O:::::Om::::::::::mm::::::::::m
-O:::::O     O:::::Om::::::::::::::::::::::m
-O:::::O     O:::::Om:::::mmm::::::mmm:::::m
-O:::::O     O:::::Om::::m   m::::m   m::::m
-O:::::O     O:::::Om::::m   m::::m   m::::m
-O::::::O   O::::::Om::::m   m::::m   m::::m
-O:::::::OOO:::::::Om::::m   m::::m   m::::m
- OO:::::::::::::OO m::::m   m::::m   m::::m
-   OO:::::::::OO   m::::m   m::::m   m::::m
-     OOOOOOOOO     mmmmmm   mmmmmm   mmmmmm
-                                           
-                                           
+                         
+     OOOOOOOOO                             
+   OO:::::::::OO                           
+  OO:::::::::::::OO                         
+ O:::::::OOO:::::::O                        
+ O::::::O   O::::::O   mmmmmmm    mmmmmmm   
+ O:::::O     O:::::O mm:::::::m  m:::::::mm 
+ O:::::O     O:::::Om::::::::::mm::::::::::m
+ O:::::O     O:::::Om::::::::::::::::::::::m
+ O:::::O     O:::::Om:::::mmm::::::mmm:::::m
+ O:::::O     O:::::Om::::m   m::::m   m::::m
+ O:::::O     O:::::Om::::m   m::::m   m::::m
+ O::::::O   O::::::Om::::m   m::::m   m::::m
+ O:::::::OOO:::::::Om::::m   m::::m   m::::m
+  OO:::::::::::::OO m::::m   m::::m   m::::m
+   OO:::::::::OO   m::::m   m::::m   m::::m
+     OOOOOOOOO     mmmmmm   mmmmmm   mmmmmm
+                         
+                         
 \e[0m"
 }
 
@@ -35,145 +35,135 @@ function check_root() {
     echo -e "\e[1;31mThis tool requires root privileges for optimal functionality.\e[0m"
     read -p "Do you want to run it with sudo? (y/n) " choice
     if [[ $choice == "y" || $choice == "Y" ]]; then
-      sudo bash "$0"
-      exit
-    else
-      echo -e "\e[1;33mSome tools might have limited functionality without root access.\e[0m"
-    fi
-  fi
-}
-
-function update_system() {
-  echo -e "\e[1;34mUpdating system...\e[0m"
-  apt update -y && apt upgrade -y
-}
-
-function check_tools() {
-  tools=(nmap netdiscover zenmap angryip masscan dnsrecon dig host fierce whatweb nikto dirb wpscan theharvester maltego recon-ng)
-  for tool in "${tools[@]}"; do
+      sudo bash "<span class="math-inline">0"
+exit
+else
+echo \-e "\\e\[1;33mSome tools might have limited functionality without root access\.\\e\[0m"
+fi
+fi
+\}
+function update\_system\(\) \{
+echo \-e "\\e\[1;34mUpdating system\.\.\.\\e\[0m"
+apt update \-y && apt upgrade \-y
+\}
+function check\_tools\(\) \{
+tools\=\(nmap netdiscover zenmap masscan dnsrecon dig host fierce whatweb nikto dirb wpscan theharvester maltego recon\-ng gobuster nikto enum4linux\)
+for tool in "</span>{tools[@]}"; do
     if ! command -v "$tool" &> /dev/null; then
       echo -e "\e[1;33m$tool not found. Installing...\e[0m"
-      apt install -y "$tool"
-    fi
-  done
-}
-
-function get_target() {
-  read -p "Enter website or IP address: " target
-}
-
-function create_directories() {
-  mkdir -p "om_results"
-  for tool in "${tools[@]}"; do
+      apt install -y "<span class="math-inline">tool"
+fi
+done
+\}
+function get\_target\(\) \{
+read \-p "Enter website or IP address\: " target
+\}
+function create\_directories\(\) \{
+mkdir \-p "om\_results"
+for tool in "</span>{tools[@]}"; do
     mkdir -p "om_results/$tool/$target"
   done
 }
 
 function get_recon_level() {
   local default_level="high"
-  read -p "Enter desired reconnaissance level (low, medium, high) [default: $default_level]: " level
-  level=${level:-$default_level} 
-  echo "$level"
-}
-
-function run_scans() {
-  echo -e "\e[1;34mRunning reconnaissance scans...\e[0m"
-  recon_level=$(get_recon_level)
+  read -p "Enter desired reconnaissance level (low, medium, high) [default: <span class="math-inline">default\_level\]\: " level
+level\=</span>{level:-$default_level} 
+  echo "<span class="math-inline">level"
+\}
+function run\_scans\(\) \{
+echo \-e "\\e\[1;34mRunning reconnaissance scans\.\.\.\\e\[0m"
+recon\_level\=</span>(get_recon_level)
 
   # Nmap
   case $recon_level in
-    low) nmap -sT -sV "$target" -oN "om_results/nmap/$target/nmap_scan.txt" ;;
-    medium) nmap -A "$target" -oN "om_results/nmap/$target/nmap_scan.txt" ;;
-    high) nmap -A -p- "$target" -oN "om_results/nmap/$target/nmap_scan.txt" ;; 
+    low) nmap_options="-sT -sV" ;;
+    medium) nmap_options="-A" ;;
+    high) nmap_options="-A -p-" ;; 
   esac
-  echo "nmap_$recon_level is running..."
+  nmap $nmap_options "$target" -oN "om_results/nmap/$target/nmap_scan.txt" &
+  echo "nmap_$recon_level is running in the background..."
 
   # Netdiscover
   case $recon_level in
-    low) netdiscover -r "$target"/24 -P -oN "om_results/netdiscover/$target/netdiscover_scan.txt" ;; 
-    medium) netdiscover -r "$target"/24 -oN "om_results/netdiscover/$target/netdiscover_scan.txt" ;;
-    high) netdiscover -r "$target"/24 -p -oN "om_results/netdiscover/$target/netdiscover_scan.txt" ;; 
+    low) netdiscover_options="-r $target/24 -P" ;; 
+    medium) netdiscover_options="-r $target/24" ;;
+    high) netdiscover_options="-r $target/24 -p" ;; 
   esac
-  echo "netdiscover_$recon_level is running..."
-
-  # Angry IP Scanner
-  case $recon_level in
-    low) angryip scanner --range "$target"/24 -o "om_results/angryip/$target/angryip_scan.txt" ;;
-    medium) angryip scanner --range "$target"/24 -d 100 -o "om_results/angryip/$target/angryip_scan.txt" ;; 
-    high) angryip scanner --range "$target"/24 -d 10 -o "om_results/angryip/$target/angryip_scan.txt" ;; 
-  esac
-  echo "angryip_$recon_level is running..."
+  netdiscover $netdiscover_options -oN "om_results/netdiscover/$target/netdiscover_scan.txt" &
+  echo "netdiscover_$recon_level is running in the background..."
 
   # Masscan
   case $recon_level in
-    low) masscan -p80,443 "$target" -oG "om_results/masscan/$target/masscan_scan.txt" ;;
-    medium) masscan -p1-1000 "$target" -oG "om_results/masscan/$target/masscan_scan.txt" ;; 
-    high) masscan -p1-65535 "$target" -oG "om_results/masscan/$target/masscan_scan.txt" ;; 
+    low) masscan_options="-p80,443" ;;
+    medium) masscan_options="-p1-1000" ;; 
+    high) masscan_options="-p1-65535" ;; 
   esac
-  echo "masscan_$recon_level is running..."
+  masscan $masscan_options "$target" -oG "om_results/masscan/$target/masscan_scan.txt" &
+  echo "masscan_$recon_level is running in the background..."
 
   # Dnsrecon
   case $recon_level in
-    low) dnsrecon -d "$target" -o "om_results/dnsrecon/$target/dnsrecon_scan.xml" ;;
-    medium) dnsrecon -d "$target" -t std,srv,axfr -o "om_results/dnsrecon/$target/dnsrecon_scan.xml" ;; 
-    high) dnsrecon -d "$target" -t std,srv,axfr,mx,soa,ns -o "om_results/dnsrecon/$target/dnsrecon_scan.xml" ;; 
+    low) dnsrecon_options="-d $target" ;;
+    medium) dnsrecon_options="-d $target -t std,srv,axfr" ;; 
+    high) dnsrecon_options="-d $target -t std,srv,axfr,mx,soa,ns" ;; 
   esac
-  echo "dnsrecon_$recon_level is running..."
+  dnsrecon $dnsrecon_options -o "om_results/dnsrecon/$target/dnsrecon_scan.xml" &
+  echo "dnsrecon_$recon_level is running in the background..."
 
   # Dig
-  dig "$target" ANY > "om_results/dig/$target/dig_scan.txt" 
-  echo "dig is running..."
+  dig "$target" ANY > "om_results/dig/$target/dig_scan.txt" &
+  echo "dig is running in the background..."
 
   # Host
-  host -t ns "$target" > "om_results/host/$target/host_scan.txt"
-  echo "host is running..."
+  host -t ns "$target" > "om_results/host/$target/host_scan.txt" &
+  echo "host is running in the background..."
 
   # Fierce
   case $recon_level in
-    low) fierce -dns "$target" > "om_results/fierce/$target/fierce_scan.txt" ;;
-    medium) fierce -dns "$target" -wide > "om_results/fierce/$target/fierce_scan.txt" ;; 
-    high) fierce -dns "$target" -wide -connect > "om_results/fierce/$target/fierce_scan.txt" ;; 
+    low) fierce_options="-dns $target" ;;
+    medium) fierce_options="-dns $target -wide" ;; 
+    high) fierce_options="-dns $target -wide -connect" ;; 
   esac
-  echo "fierce_$recon_level is running..."
+  fierce $fierce_options > "om_results/fierce/$target/fierce_scan.txt" &
+  echo "fierce_$recon_level is running in the background..."
 
   # WhatWeb
-  whatweb "$target" > "om_results/whatweb/$target/whatweb_scan.txt"
-  echo "whatweb is running..."
+  whatweb "$target" > "om_results/whatweb/$target/whatweb_scan.txt" &
+  echo "whatweb is running in the background..."
 
   # Nikto
   case $recon_level in
-    low) nikto -h "$target" -o "om_results/nikto/$target/nikto_scan.txt" ;;
-    medium) nikto -h "$target" -evasion 1 -o "om_results/nikto/$target/nikto_scan.txt" ;; 
-    high) nikto -h "$target" -evasion 4 -o "om_results/nikto/$target/nikto_scan.txt" ;; 
+    low) nikto_options="-h $target" ;;
+    medium) nikto_options="-h $target -evasion 1" ;; 
+    high) nikto_options="-h $target -evasion 4" ;; 
   esac
-  echo "nikto_$recon_level is running..."
+  nikto $nikto_options -o "om_results/nikto/$target/nikto_scan.txt" &
+  echo "nikto_$recon_level is running in the background..."
 
   # Dirb
-  dirb http://"$target" /usr/share/wordlists/dirb/common.txt -o "om_results/dirb/$target/dirb_scan.txt"
-  echo "dirb is running..."
+  dirb http://"$target" /usr/share/wordlists/dirb/common.txt -o "om_results/dirb/$target/dirb_scan.txt" &
+  echo "dirb is running in the background..."
+
+  # Gobuster
+  case $recon_level in
+    low) gobuster_options="-u http://$target -w /usr/share/wordlists/dirb/common.txt" ;;
+    medium) gobuster_options="-u http://$target -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt" ;;
+    high) gobuster_options="-u http://$target -w /usr/share/wordlists/dirbuster/directory-list-2.3-small.txt -x php,html,txt,js" ;;
+  esac
+  gobuster dir $gobuster_options -o "om_results/gobuster/$target/gobuster_scan.txt" &
+  echo "gobuster_$recon_level is running in the background..."
+
 
   # WPScan
   case $recon_level in
-    low) wpscan --url "$target" -o "om_results/wpscan/$target/wpscan_scan.json" ;;
-    medium) wpscan --url "$target" --enumerate u -o "om_results/wpscan/$target/wpscan_scan.json" ;; 
-    high) wpscan --url "$target" --enumerate u,p,t -o "om_results/wpscan/$target/wpscan_scan.json" ;; 
+    low) wpscan_options="--url $target" ;;
+    medium) wpscan_options="--url $target --enumerate u" ;; 
+    high) wpscan_options="--url $target --enumerate u,p,t" ;; 
   esac
-  echo "wpscan_$recon_level is running..."
+  wpscan $wpscan_options -o "om_results/wpscan/$target/wpscan_scan.json" &
+  echo "wpscan_$recon_level is running in the background..."
 
   # TheHarvester
   case $recon_level in
-    low) theharvester -d "$target" -l 100 -b google > "om_results/theharvester/$target/theharvester_scan.txt" ;; 
-    medium) theharvester -d "$target" -l 500 -b google > "om_results/theharvester/$target/theharvester_scan.txt" ;;
-    high) theharvester -d "$target" -l 1000 -b google,bing,linkedin > "om_results/theharvester/$target/theharvester_scan.txt" ;;
-  esac
-  echo "theharvester_$recon_level is running..."
-}
-
-# --- Main Script Execution ---
-banner
-check_root
-update_system
-check_tools
-get_target
-create_directories
-run_scans
+    low) theharvester_options="-d $target -l
