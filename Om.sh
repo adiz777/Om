@@ -2,7 +2,7 @@
 
 # Tool Name: OM
 # Description: A comprehensive reconnaissance tool for Kali Linux with reporting options.
-# Created by Major_Adi
+# Created by Adiz777 (Enhanced by Gemini Advanced)
 
 # --- Configuration ---
 
@@ -46,7 +46,6 @@ function check_root() {
     echo -e "\e[1;31mThis tool requires root privileges for optimal functionality.\e[0m"
     read -p "Do you want to run it with sudo? (y/n) " choice
     if [[ $choice == "y" || $choice == "Y" ]]; then
-<<<<<<< HEAD
       sudo bash "$0" "<span class="math-inline">target"  \# Pass the target argument
 exit
 else
@@ -61,24 +60,6 @@ apt update \-y &\> /dev/null && apt upgrade \-y &\> /dev/null
 function check\_tools\(\) \{
 tools\=\(nmap masscan sublist3r assetfinder amass dnsrecon dig host fierce whatweb nikto dirb gobuster wpscan theharvester enum4linux feroxbuster nuclei wkhtmltopdf\)
 for tool in "</span>{tools[@]}"; do
-=======
-      sudo bash "$0" "$target"  # Pass the target argument
-      exit
-    else
-      echo -e "\e[1;33mSome tools might have limited functionality without root access.\e[0m"
-    fi
-  fi
-}
-
-function update_system() {  # Corrected function definition
-  echo -e "\e[1;34mUpdating system...\e[0m"
-  apt update -y &> /dev/null && apt upgrade -y &> /dev/null
-}
-
-function check_tools() {
-  tools=(nmap masscan sublist3r assetfinder amass dnsrecon dig host fierce whatweb nikto dirb gobuster wpscan theharvester enum4linux feroxbuster nuclei wkhtmltopdf)
-  for tool in "${tools[@]}"; do
->>>>>>> fc40c6028dae36eca8b7f3180ec4e40366d1fe0c
     if ! command -v "$tool" &> /dev/null; then
       echo -e "\e[1;33m$tool not found. Installing...\e[0m"
       apt install -y "$tool" &> /dev/null
@@ -231,11 +212,7 @@ function run_vulnerability_scanning() {
   nuclei -u "$target" -o "$output_dir/nuclei/<span class="math-inline">target/nuclei\_scan\.txt" &
 echo "Nuclei scan is running in the background\.\.\."
 \}
-<<<<<<< HEAD
 function generate\_report\(\) \{  \# Corrected function definition
-=======
-function generate\_report\(\) \{
->>>>>>> fc40c6028dae36eca8b7f3180ec4e40366d1fe0c
 echo \-e "\\e\[1;34mGenerating report\.\.\.\\e\[0m"
 read \-p "Enter desired report format \(pdf, html, txt\) \[default\: txt\]\: " report\_format
 report\_format\=</span>{report_format:-txt}
@@ -335,8 +312,4 @@ for tool in "</span>{tools[@]}"; do
         if [[ -f "$output_dir/$tool/$target/"*.txt ]] || [[ -f "$output_dir/$tool/$target/"*.json ]]; then
           echo "<table>" >> "$output_dir/$target/report.html"
           if [[ -f "$output_dir/$tool/$target/"*.txt ]]; then
-<<<<<<< HEAD
             cat "$output_dir/$tool/<span class="math-inline">target/"\*\.txt \| sed 's/</span>/<br>/' | while read line; do echo "<tr><td>$line</td></tr>"; done >> "$output
-=======
-            cat "$output_dir/$tool/<span class="math-inline">target/"\*\.txt \| sed 's/</span>/<br>/' | while read line; do echo "<tr><td>$line</td></tr>"; done >> "$output_dir/$target/
->>>>>>> fc40c6028dae36eca8b7f3180ec4e40366d1fe0c
