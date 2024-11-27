@@ -46,22 +46,20 @@ function check_root() {
     echo -e "\e[1;31mThis tool requires root privileges for optimal functionality.\e[0m"
     read -p "Do you want to run it with sudo? (y/n) " choice
     if [[ $choice == "y" || $choice == "Y" ]]; then
-      sudo bash "$0" "$target"  # Pass the target argument
-      exit
-    else
-      echo -e "\e[1;33mSome tools might have limited functionality without root access.\e[0m"
-    fi
-  fi
-}
-
-function update_system() {
-  echo -e "\e[1;34mUpdating system...\e[0m"
-  apt update -y &> /dev/null && apt upgrade -y &> /dev/null
-}
-
-function check_tools() {
-  tools=(nmap masscan sublist3r assetfinder amass dnsrecon dig host fierce whatweb nikto dirb gobuster wpscan theharvester enum4linux feroxbuster nuclei wkhtmltopdf)
-  for tool in "${tools[@]}"; do
+      sudo bash "$0" "<span class="math-inline">target"  \# Pass the target argument
+exit
+else
+echo \-e "\\e\[1;33mSome tools might have limited functionality without root access\.\\e\[0m"
+fi
+fi
+\}
+function update\_system\(\) \{
+echo \-e "\\e\[1;34mUpdating system\.\.\.\\e\[0m"
+apt update \-y &\> /dev/null && apt upgrade \-y &\> /dev/null
+\}
+function check\_tools\(\) \{
+tools\=\(nmap masscan sublist3r assetfinder amass dnsrecon dig host fierce whatweb nikto dirb gobuster wpscan theharvester enum4linux feroxbuster nuclei wkhtmltopdf\)
+for tool in "</span>{tools[@]}"; do
     if ! command -v "$tool" &> /dev/null; then
       echo -e "\e[1;33m$tool not found. Installing...\e[0m"
       apt install -y "$tool" &> /dev/null
@@ -86,16 +84,16 @@ function get_target() {
 }
 
 function create_directories() {
-  mkdir -p "$output_dir"
-  for tool in "${tools[@]}"; do
+  mkdir -p "<span class="math-inline">output\_dir"
+for tool in "</span>{tools[@]}"; do
     mkdir -p "$output_dir/$tool/$target"
   done
 }
 
 function get_recon_level() {
   local default_level="high"
-  read -p "Enter desired reconnaissance level (low, medium, high) [default: $default_level]: " level
-  level=${level:-$default_level}
+  read -p "Enter desired reconnaissance level (low, medium, high) [default: <span class="math-inline">default\_level\]\: " level
+level\=</span>{level:-$default_level}
   echo "$level"
 }
 
@@ -136,7 +134,7 @@ function run_dns_enumeration() {
     medium) dnsrecon_options="-d $target -t std,srv,axfr" ;;
     high) dnsrecon_options="-d $target -t std,srv,axfr,mx,soa,ns" ;;
   esac
-  dnsrecon $dnsrecon_options -o "$output_dir/dnsrecon/$target/dnsrecon_scan.xml" &
+  dnsrecon $dnsrecon_options -o "$output_dir/dnsrecon/$target/dnsrecon_scan.xml" -j "$output_dir/dnsrecon/$target/dnsrecon_scan.json" &  # Add JSON output
   dig "$target" ANY > "$output_dir/dig/$target/dig_scan.txt" &
   host -t ns "$target" > "$output_dir/host/$target/host_scan.txt" &
   echo "DNS enumeration is running in the background..."
@@ -211,28 +209,25 @@ function run_theharvester() {
 
 function run_vulnerability_scanning() {
   echo -e "\e[1;34mRunning vulnerability scanning...\e[0m"
-  nuclei -u "$target" -o "$output_dir/nuclei/$target/nuclei_scan.txt" &
-  echo "Nuclei scan is running in the background..."
-}
-
-function generate_report() {
-  echo -e "\e[1;34mGenerating report...\e[0m"
-
-  read -p "Enter desired report format (pdf, html, txt) [default: txt]: " report_format
-  report_format=${report_format:-txt}
+  nuclei -u "$target" -o "$output_dir/nuclei/<span class="math-inline">target/nuclei\_scan\.txt" &
+echo "Nuclei scan is running in the background\.\.\."
+\}
+function generate\_report\(\) \{
+echo \-e "\\e\[1;34mGenerating report\.\.\.\\e\[0m"
+read \-p "Enter desired report format \(pdf, html, txt\) \[default\: txt\]\: " report\_format
+report\_format\=</span>{report_format:-txt}
 
   # Ask for dark/light mode preference for HTML and PDF
-  if [[ "$report_format" == "html" || "$report_format" == "pdf" ]]; then
-    read -p "Choose mode (dark/light) [default: dark]: " mode_pref
-    mode_pref=${mode_pref:-dark}
+  if [[ "$report_format" == "html" || "<span class="math-inline">report\_format" \=\= "pdf" \]\]; then
+read \-p "Choose mode \(dark/light\) \[default\: dark\]\: " mode\_pref
+mode\_pref\=</span>{mode_pref:-dark}
   fi
 
-  case $report_format in
-    pdf)
-      echo "Generating PDF report..."
-
-      # Create a temporary HTML file with the report content
-      tmp_html=$(mktemp)
+  case <span class="math-inline">report\_format in
+pdf\)
+echo "Generating PDF report\.\.\."
+\# Create a temporary HTML file with the report content
+tmp\_html\=</span>(mktemp)
       echo "<html><head><title>Reconnaissance Report - $target</title>" > "$tmp_html"
 
       # Apply dark/light mode styles based on user preference
@@ -248,13 +243,12 @@ function generate_report() {
         </style></head><body>" >> "$tmp_html"
       fi
 
-      echo "<h1>Reconnaissance Report - $target</h1>" >> "$tmp_html"
-
-      for tool in "${tools[@]}"; do
+      echo "<h1>Reconnaissance Report - $target</h1>" >> "<span class="math-inline">tmp\_html"
+for tool in "</span>{tools[@]}"; do
         echo "<h2>$tool</h2>" >> "$tmp_html"
         if [[ -f "$output_dir/$tool/$target/"*.txt ]]; then
           # Format tool output for PDF (e.g., using pre tags for code blocks)
-          cat "$output_dir/$tool/$target/"*.txt | sed 's/$/<br>/' >> "$tmp_html"
+          cat "$output_dir/$tool/<span class="math-inline">target/"\*\.txt \| sed 's/</span>/<br>/' >> "$tmp_html"
         else
           echo "<p>No output found for $tool.</p>" >> "$tmp_html"
         fi
@@ -270,52 +264,52 @@ function generate_report() {
     html)
       # Generate HTML report with dark/light mode toggle and futuristic minimal styling
       echo "<html><head><title>Reconnaissance Report - $target</title>" > "$output_dir/$target/report.html"
-      # ... (CSS and JavaScript for dark/light mode toggle) ...
-      echo "<h1>Reconnaissance Report - $target</h1>" >> "$output_dir/$target/report.html"
+      echo "<style>
+        body { font-family: 'Roboto Mono', monospace; transition: background-color 0.3s ease, color 0.3s ease; }
+        body.dark-mode { background-color: #222; color: #eee; }
+        body.light-mode { background-color: #eee; color: #222; }
+        h1, h2 { font-weight: bold; }
+        h1 { font-size: 2.5em; margin-bottom: 0.5em; }
+        h2 { font-size: 1.8em; margin-bottom: 0.3em; border-bottom: 2px solid; }
+        table { width: 80%; margin: 20px auto; border-collapse: collapse; }
+        th, td { border: 1px solid; padding: 8px; text-align: left; }
+        .toggle-container {
+          position: fixed; top: 10px; right: 10px;
+          background-color: rgba(0, 0, 0, 0.7);
+          border-radius: 5px; padding: 5px;
+        }
+        .toggle { appearance: none; -webkit-appearance: none; -moz-appearance: none;
+          width: 40px; height: 20px; background: #ccc; border-radius: 10px;
+          position: relative; cursor: pointer; outline: none; transition: background 0.3s ease;
+        }
+        .toggle:checked { background: #0f0; }
+        .toggle::before { content: '';
+          display: block; width: 16px; height: 16px; border-radius: 50%;
+          background: #fff; position: absolute; top: 2px; left: 2px;
+          transition: left 0.3s ease;
+        }
+        .toggle:checked::before { left: 22px; }
+        pre { white-space: pre-wrap; } /* Preserve line breaks in preformatted text */
+      </style></head><body class='$mode_pref-mode'>" >> "$output_dir/$target/report.html"
 
-      for tool in "${tools[@]}"; do
-        # ... (Code to process and add tool output to the report) ...
-      done
+      # Dark/light mode toggle
+      echo "<div class='toggle-container'>
+              <input type='checkbox' id='mode-toggle' class='toggle'>
+            </div>" >> "$output_dir/$target/report.html"
 
-      echo "</body></html>" >> "$output_dir/$target/report.html"
-      ;;
+      echo "<script>
+        const toggle = document.getElementById('mode-toggle');
+        const body = document.body;
+        toggle.addEventListener('change', () => {
+          body.classList.toggle('dark-mode');
+          body.classList.toggle('light-mode');
+        });
+      </script>" >> "$output_dir/$target/report.html"
 
-    txt)
-      # ... (Text report generation with requirements and specifications) ...
-
-      ;;
-
-    *)
-      echo "Invalid report format. Using default (txt)."
-      generate_report
-      ;;
-  esac
-}
-
-# --- Main Script Execution ---
-
-clear
-
-banner
-check_root
-update_system
-check_tools
-get_target "$@"
-create_directories
-recon_level=$(get_recon_level)
-
-run_subdomain_enumeration
-run_nmap_scan
-run_masscan_scan
-run_dns_enumeration
-run_fierce_scan
-run_web_server_analysis
-run_directory_bruteforcing
-run_wpscan
-run_theharvester
-run_vulnerability_scanning
-
-# Wait for background processes to finish
-wait
-
-generate_report
+      echo "<h1>Reconnaissance Report - $target</h1>" >> "$output_dir/<span class="math-inline">target/report\.html"
+for tool in "</span>{tools[@]}"; do
+        echo "<h2>$tool</h2>" >> "$output_dir/$target/report.html"
+        if [[ -f "$output_dir/$tool/$target/"*.txt ]] || [[ -f "$output_dir/$tool/$target/"*.json ]]; then
+          echo "<table>" >> "$output_dir/$target/report.html"
+          if [[ -f "$output_dir/$tool/$target/"*.txt ]]; then
+            cat "$output_dir/$tool/<span class="math-inline">target/"\*\.txt \| sed 's/</span>/<br>/' | while read line; do echo "<tr><td>$line</td></tr>"; done >> "$output_dir/$target/
