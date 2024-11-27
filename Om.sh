@@ -57,9 +57,9 @@ function update_system() {
   echo -e "\e[1;34mUpdating system...\e[0m"
   apt update -y &> /dev/null && apt upgrade -y &> /dev/null
 }
-function check\_tools\(\) \{
-tools\=\(nmap masscan sublist3r assetfinder amass dnsrecon dig host fierce whatweb nikto dirb gobuster wpscan theharvester enum4linux feroxbuster nuclei wkhtmltopdf\)
-for tool in "</span>{tools[@]}"; do
+function check_tools() {
+  tools=(nmap masscan sublist3r assetfinder amass dnsrecon dig host fierce whatweb nikto dirb gobuster wpscan theharvester enum4linux feroxbuster nuclei wkhtmltopdf)
+  for tool in "${tools[@]}"; do
     if ! command -v "$tool" &> /dev/null; then
       echo -e "\e[1;33m$tool not found. Installing...\e[0m"
       apt install -y "$tool" &> /dev/null
