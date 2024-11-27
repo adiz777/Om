@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Tool Name: OM
-# Description: A comprehensive reconnaissance tool for Kali Linux.
+# Description: A comprehensive reconnaissance tool for Kali Linux with reporting options.
 # Created by Adiz777 (Enhanced by Gemini Advanced)
 
 # --- Configuration ---
@@ -47,7 +47,7 @@ function check_root() {
     echo -e "\e[1;31mThis tool requires root privileges for optimal functionality.\e[0m"
     read -p "Do you want to run it with sudo? (y/n) " choice
     if [[ $choice == "y" || $choice == "Y" ]]; then
-      sudo bash "$0"
+      sudo bash "$0" "$target"  # Pass the target argument
       exit
     else
       echo -e "\e[1;33mSome tools might have limited functionality without root access.\e[0m"
@@ -61,7 +61,7 @@ function update_system() {
 }
 
 function check_tools() {
-  tools=(nmap masscan sublist3r assetfinder amass dnsrecon dig host fierce whatweb nikto dirb gobuster wpscan theharvester enum4linux feroxbuster nuclei)
+  tools=(nmap masscan sublist3r assetfinder amass dnsrecon dig host fierce whatweb nikto dirb gobuster wpscan theharvester enum4linux feroxbuster nuclei wkhtmltopdf)
   for tool in "${tools[@]}"; do
     if ! command -v "$tool" &> /dev/null; then
       echo -e "\e[1;33m$tool not found. Installing in background...\e[0m"
@@ -71,12 +71,17 @@ function check_tools() {
 }
 
 function get_target() {
-  while [[ -z "$target" ]]; do
-    read -p "Enter website or IP address: " target
-    if [[ -z "$target" ]]; then
-      echo -e "\e[1;31mNo input detected. Please provide a valid website or IP address.\e[0m"
-    fi
-  done
+  # Check if target is provided as an argument
+  if [[ -n "$1" ]]; then
+    target="$1"
+  else
+    while [[ -z "$target" ]]; do
+      read -p "Enter website or IP address: " target
+      if [[ -z "$target" ]]; then
+        echo -e "\e[1;31mNo input detected. Please provide a valid website or IP address.\e[0m"
+      fi
+    done
+  fi
 }
 
 function create_directories() {
@@ -211,8 +216,58 @@ function run_vulnerability_scanning() {
 
 function generate_report() {
   echo -e "\e[1;34mGenerating report...\e[0m"
-  # TODO: Implement report generation (e.g., using a tool like 'markdown-report')
-  echo "Report generation is not yet implemented."
+
+  read -p "Enter desired report format (pdf, html, txt) [default: txt]: " report_format
+  report_format=${report_format:-txt}
+
+  case $report_format in
+    pdf)
+      echo "Generating PDF report..."
+      wkhtmltopdf --quiet "$output_dir/$target/"*.txt "$output_dir/$target/report.pdf"
+      ;;
+
+    html)
+      # Generate an HTML report with dark mode and futuristic styling
+      echo "<html><head><title>Reconnaissance Report - $target</title>" > "$output_dir/$target/report.html"
+      echo "<style>
+        body { background-color: #222; color: #eee; font-family: monospace; }
+        h1, h2, h3 { color: #0f0; }
+        table { width: 80%; margin: 20px auto; border-collapse: collapse; }
+        th, td { border: 1px solid #555; padding: 10px; text-align: left; }
+      </style></head><body>" >> "$output_dir/$target/report.html"
+      echo "<h1>Reconnaissance Report - $target</h1>" >> "$output_dir/$target/report.html"
+
+      for tool in "${tools[@]}"; do
+        echo "<h2>$tool</h2>" >> "$output_dir/$target/report.html"
+        if [[ -f "$output_dir/$tool/$target/"*.txt ]]; then
+          echo "<table>" >> "$output_dir/$target/report.html"
+          # Process the output of each tool and format it into an HTML table
+          cat "$output_dir/$tool/$target/"*.txt | sed 's/$/<br>/' | while read line; do echo "<tr><td>$line</td></tr>"; done >> "$output_dir/$target/report.html"
+          echo "</table>" >> "$output_dir/$target/report.html"
+        else
+          echo "<p>No output found for $tool.</p>" >> "$output_dir/$target/report.html"
+        fi
+      done
+
+      echo "</body></html>" >> "$output_dir/$target/report.html"
+      ;;
+
+    txt)
+      # Generate a simple, human-readable text report
+      echo "Reconnaissance Report - $target" > "$output_dir/$target/report.txt"
+      for tool in "${tools[@]}"; do
+        if [[ -f "$output_dir/$tool/$target/"*.txt ]]; then  # Check if output files exist
+          echo "\n$tool\n" >> "$output_dir/$target/report.txt"
+          cat "$output_dir/$tool/$target/"* >> "$output_dir/$target/report.txt"
+        fi
+      done
+      ;;
+
+    *)
+      echo "Invalid report format. Using default (txt)."
+      generate_report  # Call the function again to use the default
+      ;;
+  esac
 }
 
 # --- Main Script Execution ---
@@ -220,8 +275,8 @@ function generate_report() {
 banner
 check_root
 update_system
-check_tools
-get_target
+check_tools  # This will now install wkhtmltopdf if not found
+get_target "$@"  # Pass all arguments to get_target
 create_directories
 recon_level=$(get_recon_level)
 
