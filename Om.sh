@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Tool Name: OM
-# Description: A comprehensive reconnaissance tool for Kali Linux with reporting options.
+# Description: A comprehensive reconnaissance tool for Kali Linux.
 # Created by Adiz777 (Enhanced by Gemini Advanced)
 
 # --- Configuration ---
@@ -20,10 +20,10 @@ function banner() {
   echo -e "\e[1;32m
                         
      OOOOOOOOO                     
-  OO:::::::::OO                     
- OO:::::::::::::OO                    
-O:::::::OOO:::::::O                   
-O::::::O   O::::::O   mmmmmmm   mmmmmmm    
+ OO:::::::::OO                     
+OO:::::::::::::OO                     
+O:::::::OOO:::::::O                     
+O::::::O   O::::::O   mmmmmmm   mmmmmmm   
 O:::::O     O:::::O mm:::::::m m:::::::mm 
 O:::::O     O:::::Om::::::::::mm::::::::::m
 O:::::O     O:::::Om::::::::::::::::::::::m
@@ -31,9 +31,10 @@ O:::::O     O:::::Om:::::mmm::::::mmm:::::m
 O:::::O     O:::::Om::::m   m::::m   m::::m
 O:::::O     O:::::Om::::m   m::::m   m::::m
 O:::::O     O:::::Om::::m   m::::m   m::::m
+O:::::O     O:::::Om::::m   m::::m   m::::m
 O::::::O   O::::::Om::::m   m::::m   m::::m
 O:::::::OOO:::::::Om::::m   m::::m   m::::m
- OO:::::::::::::OO m::::m   m::::m   m::::m
+ OO:::::::::::::OO  m::::m   m::::m   m::::m
   OO:::::::::OO   m::::m   m::::m   m::::m
      OOOOOOOOO     mmmmmm   mmmmmm   mmmmmm
                         
@@ -60,7 +61,7 @@ function update_system() {
 }
 
 function check_tools() {
-  tools=(nmap masscan sublist3r assetfinder amass dnsrecon dig host fierce whatweb nikto dirb gobuster wpscan theharvester enum4linux feroxbuster nuclei wkhtmltopdf)
+  tools=(nmap masscan sublist3r assetfinder amass dnsrecon dig host fierce whatweb nikto dirb gobuster wpscan theharvester enum4linux feroxbuster nuclei)
   for tool in "${tools[@]}"; do
     if ! command -v "$tool" &> /dev/null; then
       echo -e "\e[1;33m$tool not found. Installing...\e[0m"
@@ -215,143 +216,6 @@ function run_vulnerability_scanning() {
   echo "Nuclei scan is running in the background..."
 }
 
-function generate_report() {
-  # ... (Other code in the function) ...
-
-  case $report_format in
-    pdf)
-      # PDF report generation
-      echo "Generating PDF report..."
-
-      # Create a temporary HTML file with the report content
-      tmp_html=$(mktemp)
-      echo "<html><head><title>Reconnaissance Report - $target</title>" > "$tmp_html"
-
-      # Apply dark/light mode styles based on user preference
-      if [[ "$mode_pref" == "dark" ]]; then
-        echo "<style>
-          body { background-color: #222; color: #eee; font-family: sans-serif; }
-          h1, h2 { color: #0f0; }
-        </style></head><body>" >> "$tmp_html"
-      else
-        echo "<style>
-          body { background-color: #eee; color: #222; font-family: sans-serif; }
-          h1, h2 { color: #007bff; }
-        </style></head><body>" >> "$tmp_html"
-      fi
-
-      echo "<h1>Reconnaissance Report - $target</h1>" >> "$tmp_html"
-
-      for tool in "${tools[@]}"; do
-        echo "<h2>$tool</h2>" >> "$tmp_html"
-        if [[ -f "$output_dir/$tool/$target/"*.txt ]]; then
-          # Format tool output for PDF (e.g., using pre tags for code blocks)
-          cat "$output_dir/$tool/$target/"*.txt | sed 's/$/<br>/' >> "$tmp_html"
-        else
-          echo "<p>No output found for $tool.</p>" >> "$tmp_html"
-        fi
-      done
-
-      echo "</body></html>" >> "$tmp_html"
-
-      # Convert the temporary HTML to PDF using wkhtmltopdf
-      wkhtmltopdf --quiet "$tmp_html" "$output_dir/$target/report.pdf"
-      rm "$tmp_html"
-      ;;
-
-    html)
-      # HTML report generation with dark/light mode toggle
-      echo "<html><head><title>Reconnaissance Report - $target</title>" > "$output_dir/$target/report.html"
-      echo "<style>
-        body { font-family: 'Roboto Mono', monospace; transition: background-color 0.3s ease, color 0.3s ease; }
-        body.dark-mode { background-color: #222; color: #eee; }
-        body.light-mode { background-color: #eee; color: #222; }
-        h1, h2 { font-weight: bold; }
-        h1 { font-size: 2.5em; margin-bottom: 0.5em; }
-        h2 { font-size: 1.8em; margin-bottom: 0.3em; border-bottom: 2px solid; }
-        table { width: 80%; margin: 20px auto; border-collapse: collapse; }
-        th, td { border: 1px solid; padding: 8px; text-align: left; }
-        .toggle-container {
-          position: fixed; top: 10px; right: 10px;
-          background-color: rgba(0, 0, 0, 0.7);
-          border-radius: 5px; padding: 5px;
-        }
-        .toggle { appearance: none; -webkit-appearance: none; -moz-appearance: none;
-          width: 40px; height: 20px; background: #ccc; border-radius: 10px;
-          position: relative; cursor: pointer; outline: none; transition: background 0.3s ease;
-        }
-        .toggle:checked { background: #0f0; }
-        .toggle::before { content: '';
-          display: block; width: 16px; height: 16px; border-radius: 50%;
-          background: #fff; position: absolute; top: 2px; left: 2px;
-          transition: left 0.3s ease;
-        }
-        .toggle:checked::before { left: 22px; }
-        pre { white-space: pre-wrap; } /* Preserve line breaks in preformatted text */
-      </style></head><body class='$mode_pref-mode'>" >> "$output_dir/$target/report.html"
-
-      # Dark/light mode toggle
-      echo "<div class='toggle-container'>
-              <input type='checkbox' id='mode-toggle' class='toggle'>
-            </div>" >> "$output_dir/$target/report.html"
-
-      echo "<script>
-        const toggle = document.getElementById('mode-toggle');
-        const body = document.body;
-        toggle.addEventListener('change', () => {
-          body.classList.toggle('dark-mode');
-          body.classList.toggle('light-mode');
-        });
-      </script>" >> "$output_dir/$target/report.html"
-
-      echo "<h1>Reconnaissance Report - $target</h1>" >> "$output_dir/$target/report.html"
-
-      for tool in "${tools[@]}"; do
-        echo "<h2>$tool</h2>" >> "$output_dir/$target/report.html"
-        if [[ -f "$output_dir/$tool/$target/"*.txt ]] || [[ -f "$output_dir/$tool/$target/"*.json ]]; then
-          echo "<pre>" >> "$output_dir/$target/report.html"  # Wrap output in <pre> tags
-          if [[ -f "$output_dir/$tool/$target/"*.txt ]]; then
-            cat "$output_dir/$tool/$target/"*.txt >> "$output_dir/$target/report.html"
-          fi
-          if [[ -f "$output_dir/$tool/$target/"*.json ]]; then
-            cat "$output_dir/$tool/$target/"*.json >> "$output_dir/$target/report.html"
-          fi
-          echo "</pre>" >> "$output_dir/$target/report.html"  # Close the <pre> tag
-        else
-          echo "<p>No output found for $tool.</p>" >> "$output_dir/$target/report.html"
-        fi
-      done
-
-      echo "</body></html>" >> "$output_dir/$target/report.html"
-      ;;
-
-    txt)
-      # Text report generation with requirements and specifications
-      echo "Generating Text report..."
-      echo "Reconnaissance Report - $target" > "$output_dir/$target/report.txt"
-      echo "----------------------------------------" >> "$output_dir/$target/report.txt"
-      echo "Requirements and Specifications" >> "$output_dir/$target/report.txt"
-      echo "----------------------------------------" >> "$output_dir/$target/report.txt"
-      echo "Operating System: Kali Linux or similar" >> "$output_dir/$target/report.txt"
-      echo "Shell: Bash" >> "$output_dir/$target/report.txt"
-      echo "Privileges: Root (recommended)" >> "$output_dir/$target/report.txt"
-      echo "Connectivity: Internet connection" >> "$output_dir/$target/report.txt"
-      echo "" >> "$output_dir/$target/report.txt" # Add an empty line
-
-      for tool in "${tools[@]}"; do
-        if [[ -f "$output_dir/$tool/$target/"*.txt ]]; then
-          echo "\n$tool\n" >> "$output_dir/$target/report.txt"
-          cat "$output_dir/$tool/$target/"* >> "$output_dir/$target/report.txt"
-        fi
-      done
-      ;;
-
-    *)
-      echo "Invalid report format. Using default (txt)."
-      generate_report
-      ;;
-  esac
-}
 # --- Main Script Execution ---
 
 clear
@@ -379,5 +243,3 @@ run_vulnerability_scanning
 
 # Wait for background processes to finish
 wait
-
-generate_report
