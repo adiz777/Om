@@ -2,7 +2,7 @@
 
 # Tool Name: OM
 # Description: A comprehensive reconnaissance tool for Kali Linux with reporting options.
-# Created by Adiz777 (Enhanced by Gemini Advanced)
+# Created by Major_Adi
 
 # --- Configuration ---
 
@@ -46,20 +46,22 @@ function check_root() {
     echo -e "\e[1;31mThis tool requires root privileges for optimal functionality.\e[0m"
     read -p "Do you want to run it with sudo? (y/n) " choice
     if [[ $choice == "y" || $choice == "Y" ]]; then
-      sudo bash "$0" "<span class="math-inline">target"  \# Pass the target argument
-exit
-else
-echo \-e "\\e\[1;33mSome tools might have limited functionality without root access\.\\e\[0m"
-fi
-fi
-\}
-function update\_system\(\) \{
-echo \-e "\\e\[1;34mUpdating system\.\.\.\\e\[0m"
-apt update \-y &\> /dev/null && apt upgrade \-y &\> /dev/null
-\}
-function check\_tools\(\) \{
-tools\=\(nmap masscan sublist3r assetfinder amass dnsrecon dig host fierce whatweb nikto dirb gobuster wpscan theharvester enum4linux feroxbuster nuclei wkhtmltopdf\)
-for tool in "</span>{tools[@]}"; do
+      sudo bash "$0" "$target"  # Pass the target argument
+      exit
+    else
+      echo -e "\e[1;33mSome tools might have limited functionality without root access.\e[0m"
+    fi
+  fi
+}
+
+function update_system() {  # Corrected function definition
+  echo -e "\e[1;34mUpdating system...\e[0m"
+  apt update -y &> /dev/null && apt upgrade -y &> /dev/null
+}
+
+function check_tools() {
+  tools=(nmap masscan sublist3r assetfinder amass dnsrecon dig host fierce whatweb nikto dirb gobuster wpscan theharvester enum4linux feroxbuster nuclei wkhtmltopdf)
+  for tool in "${tools[@]}"; do
     if ! command -v "$tool" &> /dev/null; then
       echo -e "\e[1;33m$tool not found. Installing...\e[0m"
       apt install -y "$tool" &> /dev/null
