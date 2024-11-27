@@ -213,35 +213,23 @@ function run_vulnerability_scanning() {
 echo "Nuclei scan is running in the background\.\.\."
 \}
 function generate_report() {
-echo \-e "\\e\[1;34mGenerating report\.\.\.\\e\[0m"
-read \-p "Enter desired report format \(pdf, html, txt\) \[default\: txt\]\: " report\_format
-report\_format\=</span>{report_format:-txt}
-}
+  echo -e "\e[1;34mGenerating report...\e[0m"
+
+  read -p "Enter desired report format (pdf, html, txt) [default: txt]: " report_format
+  report_format=${report_format:-txt}
 
   # Ask for dark/light mode preference for HTML and PDF
   if [[ "$report_format" == "html" || "$report_format" == "pdf" ]]; then
-read \-p "Choose mode \(dark/light\) \[default\: dark\]\: " mode\_pref
-mode\_pref\=</span>{mode_pref:-dark}
+    read -p "Choose mode (dark/light) [default: dark]: " mode_pref
+    mode_pref=${mode_pref:-dark}
   fi
 
-  case <span class="math-inline">report\_format in
-pdf\)
-echo "Generating PDF report\.\.\."
-\# Create a temporary HTML file with the report content
-tmp\_html\=</span>(mktemp)
-      echo "<html><head><title>Reconnaissance Report - $target</title>" > "$tmp_html"
+  case $report_format in
+    pdf)
+      echo "Generating PDF report..."
 
-      # Apply dark/light mode styles based on user preference
-       if [[ "$report_format" == "html" || "$report_format" == "pdf" ]]; then
-read \-p "Choose mode \(dark/light\) \[default\: dark\]\: " mode\_pref
-mode\_pref\=</span>{mode_pref:-dark}
-  fi
-
-  case <span class="math-inline">report\_format in
-pdf\)
-echo "Generating PDF report\.\.\."
-\# Create a temporary HTML file with the report content
-tmp\_html\=</span>(mktemp)
+      # Create a temporary HTML file with the report content
+      tmp_html=$(mktemp)
       echo "<html><head><title>Reconnaissance Report - $target</title>" > "$tmp_html"
 
       # Apply dark/light mode styles based on user preference
@@ -257,12 +245,13 @@ tmp\_html\=</span>(mktemp)
         </style></head><body>" >> "$tmp_html"
       fi
 
-      echo "<h1>Reconnaissance Report - $target</h1>" >> "<span class="math-inline">tmp\_html"
-for tool in "</span>{tools[@]}"; do
+      echo "<h1>Reconnaissance Report - $target</h1>" >> "$tmp_html"
+
+      for tool in "${tools[@]}"; do
         echo "<h2>$tool</h2>" >> "$tmp_html"
         if [[ -f "$output_dir/$tool/$target/"*.txt ]]; then
           # Format tool output for PDF (e.g., using pre tags for code blocks)
-          cat "$output_dir/$tool/<span class="math-inline">target/"\*\.txt \| sed 's/</span>/<br>/' >> "$tmp_html"
+          cat "$output_dir/$tool/$target/"*.txt | sed 's/$/<br>/' >> "$tmp_html"
         else
           echo "<p>No output found for $tool.</p>" >> "$tmp_html"
         fi
@@ -320,12 +309,80 @@ for tool in "</span>{tools[@]}"; do
         });
       </script>" >> "$output_dir/$target/report.html"
 
-      echo "<h1>Reconnaissance Report - $target</h1>" >> "$output_dir/<span class="math-inline">target/report\.html"
-for tool in "</span>{tools[@]}"; do
+      echo "<h1>Reconnaissance Report - $target</h1>" >> "$output_dir/$target/report.html"
+
+      for tool in "${tools[@]}"; do
         echo "<h2>$tool</h2>" >> "$output_dir/$target/report.html"
         if [[ -f "$output_dir/$tool/$target/"*.txt ]] || [[ -f "$output_dir/$tool/$target/"*.json ]]; then
           echo "<pre>" >> "$output_dir/$target/report.html"  # Wrap output in <pre> tags
           if [[ -f "$output_dir/$tool/$target/"*.txt ]]; then
             cat "$output_dir/$tool/$target/"*.txt >> "$output_dir/$target/report.html"
           fi
-          if [[ -f "$output_dir
+          if [[ -f "$output_dir/$tool/$target/"*.json ]]; then
+            cat "$output_dir/$tool/$target/"*.json >> "$output_dir/$target/report.html"
+          fi
+          echo "</pre>" >> "$output_dir/$target/report.html"  # Close the <pre> tag
+        else
+          echo "<p>No output found for $tool.</p>" >> "$output_dir/$target/report.html"
+        fi
+      done
+
+      echo "</body></html>" >> "$output_dir/$target/report.html"
+      ;;
+
+    txt)
+      echo "Generating Text report..."
+      echo "Reconnaissance Report - $target" > "$output_dir/$target/report.txt"
+      echo "----------------------------------------" >> "$output_dir/$target/report.txt"
+      echo "Requirements and Specifications" >> "$output_dir/$target/report.txt"
+      echo "----------------------------------------" >> "$output_dir/$target/report.txt"
+      echo "Operating System: Kali Linux or similar" >> "$output_dir/$target/report.txt"
+      echo "Shell: Bash" >> "$output_dir/$target/report.txt"
+      echo "Privileges: Root (recommended)" >> "$output_dir/$target/report.txt"
+      echo "Connectivity: Internet connection" >> "$output_dir/$target/report.txt"
+      echo "" >> "$output_dir/$target/report.txt" # Add an empty line
+
+      for tool in "${tools[@]}"; do
+        if [[ -f "$output_dir/$tool/$target/"*.txt ]]; then
+          echo "\n$tool\n" >> "$output_dir/$target/report.txt"
+          cat "$output_dir/$tool/$target/"* >> "$output_dir/$target/report.txt"
+        fi
+      done
+      ;;
+
+    *)
+      echo "Invalid report format. Using default (txt)."
+      generate_report
+      ;;
+  esac
+}
+
+# --- Main Script Execution ---
+
+clear
+
+banner
+check_root
+update_system
+check_tools
+get_target "$@"
+
+create_directories  # Call create_directories before get_recon_level
+
+recon_level=$(get_recon_level)
+
+run_subdomain_enumeration
+run_nmap_scan
+run_masscan_scan
+run_dns_enumeration
+run_fierce_scan
+run_web_server_analysis
+run_directory_bruteforcing
+run_wpscan
+run_theharvester
+run_vulnerability_scanning
+
+# Wait for background processes to finish
+wait
+
+generate_report
