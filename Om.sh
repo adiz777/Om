@@ -136,7 +136,7 @@ function run_dns_enumeration() {
     medium) dnsrecon_options="-d $target -t std,srv,axfr" ;;
     high) dnsrecon_options="-d $target -t std,srv,axfr,mx,soa,ns" ;;
   esac
-  dnsrecon $dnsrecon_options -o "$output_dir/dnsrecon/$target/dnsrecon_scan.xml" -j "$output_dir/dnsrecon/$target/dnsrecon_scan.json" &  # Add JSON output
+  dnsrecon $dnsrecon_options -d $target -o "$output_dir/dnsrecon/$target/dnsrecon_scan.xml" -j "$output_dir/dnsrecon/$target/dnsrecon_scan.json" &  # Add JSON output
   dig "$target" ANY > "$output_dir/dig/$target/dig_scan.txt" &
   host -t ns "$target" > "$output_dir/host/$target/host_scan.txt" &
   echo "DNS enumeration is running in the background..."
