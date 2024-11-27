@@ -232,6 +232,19 @@ tmp\_html\=</span>(mktemp)
       echo "<html><head><title>Reconnaissance Report - $target</title>" > "$tmp_html"
 
       # Apply dark/light mode styles based on user preference
+       if [[ "$report_format" == "html" || "$report_format" == "pdf" ]]; then
+read \-p "Choose mode \(dark/light\) \[default\: dark\]\: " mode\_pref
+mode\_pref\=</span>{mode_pref:-dark}
+  fi
+
+  case <span class="math-inline">report\_format in
+pdf\)
+echo "Generating PDF report\.\.\."
+\# Create a temporary HTML file with the report content
+tmp\_html\=</span>(mktemp)
+      echo "<html><head><title>Reconnaissance Report - $target</title>" > "$tmp_html"
+
+      # Apply dark/light mode styles based on user preference
       if [[ "$mode_pref" == "dark" ]]; then
         echo "<style>
           body { background-color: #222; color: #eee; font-family: sans-serif; }
