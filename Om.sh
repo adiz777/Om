@@ -53,13 +53,13 @@ echo \-e "\\e\[1;33mSome tools might have limited functionality without root acc
 fi
 fi
 \}
-function update_system() {
-  echo -e "\e[1;34mUpdating system...\e[0m"
-  apt update -y &> /dev/null && apt upgrade -y &> /dev/null
-}
-function check_tools() {
-  tools=(nmap masscan sublist3r assetfinder amass dnsrecon dig host fierce whatweb nikto dirb gobuster wpscan theharvester enum4linux feroxbuster nuclei wkhtmltopdf)
-  for tool in "${tools[@]}"; do
+function update\_system\(\) \{
+echo \-e "\\e\[1;34mUpdating system\.\.\.\\e\[0m"
+apt update \-y &\> /dev/null && apt upgrade \-y &\> /dev/null
+\}
+function check\_tools\(\) \{
+tools\=\(nmap masscan sublist3r assetfinder amass dnsrecon dig host fierce whatweb nikto dirb gobuster wpscan theharvester enum4linux feroxbuster nuclei wkhtmltopdf\)
+for tool in "</span>{tools[@]}"; do
     if ! command -v "$tool" &> /dev/null; then
       echo -e "\e[1;33m$tool not found. Installing...\e[0m"
       apt install -y "$tool" &> /dev/null
@@ -212,7 +212,7 @@ function run_vulnerability_scanning() {
   nuclei -u "$target" -o "$output_dir/nuclei/<span class="math-inline">target/nuclei\_scan\.txt" &
 echo "Nuclei scan is running in the background\.\.\."
 \}
-function generate_report() {
+function generate\_report\(\) \{
 echo \-e "\\e\[1;34mGenerating report\.\.\.\\e\[0m"
 read \-p "Enter desired report format \(pdf, html, txt\) \[default\: txt\]\: " report\_format
 report\_format\=</span>{report_format:-txt}
@@ -313,3 +313,5 @@ for tool in "</span>{tools[@]}"; do
           echo "<pre>" >> "$output_dir/$target/report.html"  # Wrap output in <pre> tags
           if [[ -f "$output_dir/$tool/$target/"*.txt ]]; then
             cat "$output_dir/$tool/$target/"*.txt >> "$output_dir/$target/report.html"
+          fi
+          if [[ -f "$output_dir
