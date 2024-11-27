@@ -219,7 +219,7 @@ report\_format\=</span>{report_format:-txt}
 }
 
   # Ask for dark/light mode preference for HTML and PDF
-  if [[ "$report_format" == "html" || "<span class="math-inline">report\_format" \=\= "pdf" \]\]; then
+  if [[ "$report_format" == "html" || "$report_format" == "pdf" ]]; then
 read \-p "Choose mode \(dark/light\) \[default\: dark\]\: " mode\_pref
 mode\_pref\=</span>{mode_pref:-dark}
   fi
