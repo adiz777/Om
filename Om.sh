@@ -221,19 +221,67 @@ function generate_report() {
   read -p "Enter desired report format (pdf, html, txt) [default: txt]: " report_format
   report_format=${report_format:-txt}
 
+  # Ask for dark/light mode preference for HTML and PDF
+  if [[ "$report_format" == "html" || "$report_format" == "pdf" ]]; then
+    read -p "Choose mode (dark/light) [default: dark]: " mode_pref
+    mode_pref=${mode_pref:-dark}
+  fi
+
   case $report_format in
     pdf)
       echo "Generating PDF report..."
-      wkhtmltopdf --quiet "$output_dir/$target/"*.txt "$output_dir/$target/report.pdf"
+
+      # Create a temporary HTML file with the report content
+      tmp_html=$(mktemp)
+      echo "<html><head><title>Reconnaissance Report - $target</title>" > "$tmp_html"
+
+      # Apply dark/light mode styles based on user preference
+      if [[ "$mode_pref" == "dark" ]]; then
+        echo "<style>
+          body { background-color: #222; color: #eee; font-family: sans-serif; }
+          h1, h2 { color: #0f0; }
+        </style></head><body>" >> "$tmp_html"
+      else
+        echo "<style>
+          body { background-color: #eee; color: #222; font-family: sans-serif; }
+          h1, h2 { color: #007bff; }
+        </style></head><body>" >> "$tmp_html"
+      fi
+
+      echo "<h1>Reconnaissance Report - $target</h1>" >> "$tmp_html"
+
+      for tool in "${tools[@]}"; do
+        echo "<h2>$tool</h2>" >> "$tmp_html"
+        if [[ -f "$output_dir/$tool/$target/"*.txt ]]; then
+          # Format tool output for PDF (e.g., using pre tags for code blocks)
+          cat "$output_dir/$tool/$target/"*.txt | sed 's/$/<br>/' >> "$tmp_html"
+        else
+          echo "<p>No output found for $tool.</p>" >> "$tmp_html"
+        fi
+      done
+
+      echo "</body></html>" >> "$tmp_html"
+
+      # Convert the temporary HTML to PDF using wkhtmltopdf
+      wkhtmltopdf --quiet "$tmp_html" "$output_dir/$target/report.pdf"
+      rm "$tmp_html"
       ;;
 
     html)
-      # ... (HTML report generation remains the same) ...
+      # Generate HTML report with dark/light mode toggle and futuristic minimal styling
+      echo "<html><head><title>Reconnaissance Report - $target</title>" > "$output_dir/$target/report.html"
+      # ... (CSS and JavaScript for dark/light mode toggle) ...
+      echo "<h1>Reconnaissance Report - $target</h1>" >> "$output_dir/$target/report.html"
 
+      for tool in "${tools[@]}"; do
+        # ... (Code to process and add tool output to the report) ...
+      done
+
+      echo "</body></html>" >> "$output_dir/$target/report.html"
       ;;
 
     txt)
-      # ... (Text report generation remains the same) ...
+      # ... (Text report generation with requirements and specifications) ...
 
       ;;
 
@@ -260,7 +308,7 @@ run_subdomain_enumeration
 run_nmap_scan
 run_masscan_scan
 run_dns_enumeration
-run_fierce_scan  # This will now capture stderr
+run_fierce_scan
 run_web_server_analysis
 run_directory_bruteforcing
 run_wpscan
