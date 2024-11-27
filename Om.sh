@@ -57,11 +57,6 @@ function update_system() {
   echo -e "\e[1;34mUpdating system...\e[0m"
   apt update -y &> /dev/null && apt upgrade -y &> /dev/null
 }
-<<<<<<< HEAD
-function check_tools() {
-  tools=(nmap masscan sublist3r assetfinder amass dnsrecon dig host fierce whatweb nikto dirb gobuster wpscan theharvester enum4linux feroxbuster nuclei wkhtmltopdf)
-  for tool in "${tools[@]}"; do
-=======
 function check\_tools\(\) \{
 tools\=\(nmap masscan sublist3r assetfinder amass dnsrecon dig host fierce whatweb nikto dirb gobuster wpscan theharvester enum4linux feroxbuster nuclei wkhtmltopdf\)
 for tool in "</span>{tools[@]}"; do
