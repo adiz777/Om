@@ -212,10 +212,11 @@ function run_vulnerability_scanning() {
   nuclei -u "$target" -o "$output_dir/nuclei/<span class="math-inline">target/nuclei\_scan\.txt" &
 echo "Nuclei scan is running in the background\.\.\."
 \}
-function generate\_report\(\) \{
+function generate_report() {
 echo \-e "\\e\[1;34mGenerating report\.\.\.\\e\[0m"
 read \-p "Enter desired report format \(pdf, html, txt\) \[default\: txt\]\: " report\_format
 report\_format\=</span>{report_format:-txt}
+}
 
   # Ask for dark/light mode preference for HTML and PDF
   if [[ "$report_format" == "html" || "<span class="math-inline">report\_format" \=\= "pdf" \]\]; then
