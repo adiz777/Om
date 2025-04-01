@@ -1,47 +1,59 @@
 # Om - Automated Reconnaissance Tool
 
-**Description:**
+## Description:
+Om is a comprehensive reconnaissance tool designed for Kali Linux and other Linux distributions. It automates various command-line reconnaissance tools, offering security professionals and enthusiasts an efficient and organized way to gather intelligence on targets.
 
-Om is a minimalist reconnaissance tool for Kali Linux and other Linux distributions designed to automate the execution of various command-line reconnaissance tools. It provides a streamlined approach to information gathering, helping security professionals and enthusiasts perform efficient and comprehensive reconnaissance.
+## Features:
+- **Automated Scans**: Executes multiple reconnaissance tools including Nmap, Amass, Sublist3r, WhatWeb, DNSRecon, WafW00f, SSLScan, Wayback Machine Scraping, theHarvester, Gobuster, and CMSeek.
+- **Organized Results**: Stores results in structured directories for easy analysis.
+- **HTML Report Generation**: Automatically compiles findings into a detailed HTML report.
+- **OSINT Gathering**: Leverages theHarvester to gather public intelligence.
+- **CMS Detection**: Identifies content management systems (CMS) used by target websites.
+- **Subdomain Enumeration**: Uses Amass and Sublist3r for discovering subdomains.
+- **Port Scanning & Enumeration**: Performs comprehensive Nmap scans and extracts open ports.
+- **SSL Analysis**: Checks SSL configurations and security vulnerabilities.
+- **Historical Data Extraction**: Fetches archived URLs from the Wayback Machine.
+- **Directory Brute-Forcing**: Uses Gobuster to find hidden directories and files.
 
-**Features:**
+## Minimum Requirements:
+- **Operating System**: Kali Linux or other Debian-based Linux distributions (e.g., Parrot OS, BlackArch, Ubuntu)
+- **Shell**: Bash
+- **Privileges**: Root privileges (recommended for full functionality)
+- **Dependencies**: Install required tools using:  
+  `sudo apt install nmap amass sublist3r whatweb dnsrecon wafw00f sslscan waybackurls theHarvester gobuster cmseek`
 
-* **Automated Scans:** Automates the execution of popular reconnaissance tools like Nmap, Netdiscover, Dnsrecon, WhatWeb, Nikto, and more.
-* **Organized Results:**  Stores results in a structured directory hierarchy for easy access and analysis.
-* **HTML Report:** Generates a basic HTML report summarizing the findings.
-* **Minimalist Design:**  Focuses on a clean and efficient terminal interface.
-* **Easy to Use:**  Simple execution with minimal user interaction.
-* **Configurable Reconnaissance Levels:** Allows you to choose between low, medium, and high reconnaissance levels, adjusting the intensity of the scans.
+## Installation:
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/Adiz777/om.git
+   ```
+2. Navigate to the project folder:
+   ```sh
+   cd om
+   ```
+3. Make the script executable:
+   ```sh
+   chmod +x om_recon.sh
+   ```
 
-**Minimum Requirements:**
+## Usage:
+1. Run the tool:
+   ```sh
+   sudo ./om_recon.sh
+   ```
+2. Enter the target domain when prompted.
+3. Select the desired reconnaissance option from the interactive menu.
+4. View the generated reports inside the output directory.
 
-* **Operating System:** Kali Linux or other Linux distributions (e.g., Parrot OS, BlackArch, Debian, Ubuntu)
-* **Shell:** Bash
-* **Privileges:** Root privileges (recommended for optimal functionality)
-* **Connectivity:**  Internet connection
+## Disclaimer:
+This tool is intended for **educational and ethical purposes only**. Use it responsibly and **only** on systems you have explicit permission to scan. Unauthorized scanning is illegal and unethical.
 
-**Installation:**
-
-1. Clone the repository: `git clone https://github.com/Adiz777/om.git`
-2. Make the tool executable: `chmod +x om.sh`
-
-
-**Usage:**
-
-1. Run the tool: `sudo ./Om.sh` (or `./Om.sh` if not using sudo)
-2. Enter the target website or IP address when prompted.
-3. Select the desired reconnaissance level (low, medium, or high).
-
-**Disclaimer:**
-
-This tool is intended for educational and ethical use only. Use it responsibly and only on systems you have permission to scan. Unauthorized scanning is illegal and unethical.
-
-**Contributing:**
-
+## Contributing:
 Contributions are welcome! Feel free to open issues or submit pull requests.
 
-**Future Updates:**
+## Future Updates:
+- **Attack Mode**: A planned feature to automate the exploitation of discovered vulnerabilities.
+- **Improved Reporting**: Enhancing the HTML report with better visualization and analytics.
 
-* **Attack Mode:**  An attack mode is planned for future releases, allowing for automated exploitation of discovered vulnerabilities.
+**Created by:** MAJOR_ADI ❤️
 
-**Created by MAJOR_ADI ❤️**
