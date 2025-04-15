@@ -24,7 +24,7 @@ echo -e "${GREEN}Welcome to OM - Automated Reconnaissance Tool${RESET}\n"
 
 # Check and Install Required Tools
 check_tools() {
-    for tool in nmap amass whatweb dnsrecon sublist3r theHarvester gobuster sslscan waybackurls wafw00f cmseek; do
+    for tool in nmap amass whatweb dnsrecon sublist3r theHarvester gobuster sslscan wafw00f cmseek; do
         if ! command -v $tool &> /dev/null; then
             echo -e "${RED}[ERROR] $tool is not installed. Installing it...${RESET}"
             # Try installing tools using apt, pip, or other installation methods
@@ -92,12 +92,6 @@ ssl_scan() {
     log "SSL Scan completed."
 }
 
-wayback_scrape() {
-    log "Fetching URLs from Wayback Machine..."
-    waybackurls "$target" > "$OUTPUT_DIR/waybackurls.txt"
-    log "Wayback Machine Scraping completed."
-}
-
 cms_detection() {
     log "Detecting CMS..."
     cmseek -u "$target" --follow-redirect > "$OUTPUT_DIR/cms_detection.txt"
@@ -127,7 +121,7 @@ generate_report() {
     REPORT_FILE="$OUTPUT_DIR/report.html"
     echo "<html><head><title>OM Recon Report</title><style>body{font-family:Arial;} pre{background:#222;color:#fff;padding:10px;}</style></head><body>" > "$REPORT_FILE"
     echo "<h1>OM Recon Report - $target</h1>" >> "$REPORT_FILE"
-    for file in subdomains.txt sublist3r_subdomains.txt dnsrecon.txt webscan.txt wafw00f_results.txt nmap_scan.txt open_ports.txt sslscan.txt waybackurls.txt cms_detection.txt theHarvester_results.txt gobuster_results.txt; do
+    for file in subdomains.txt sublist3r_subdomains.txt dnsrecon.txt webscan.txt wafw00f_results.txt nmap_scan.txt open_ports.txt sslscan.txt cms_detection.txt theHarvester_results.txt gobuster_results.txt; do
         if [[ -f "$OUTPUT_DIR/$file" ]]; then
             echo "<h2>${file%.txt}</h2><pre>$(cat "$OUTPUT_DIR/$file")</pre>" >> "$REPORT_FILE"
         fi
@@ -145,14 +139,13 @@ while true; do
     echo -e "3️⃣ Web Tech Scan"
     echo -e "4️⃣ Nmap Scan"
     echo -e "5️⃣ SSL Scan"
-    echo -e "6️⃣ Wayback Machine Scrape"
-    echo -e "7️⃣ CMS Detection"
-    echo -e "8️⃣ Open Ports Summary"
-    echo -e "9️⃣ OSINT Harvesting"
-    echo -e "🔟 Directory Brute Force"
-    echo -e "1️⃣1️⃣ Generate HTML Report"
-    echo -e "1️⃣2️⃣ Run All"
-    echo -e "1️⃣3️⃣ Exit"
+    echo -e "6️⃣ CMS Detection"
+    echo -e "7️⃣ Open Ports Summary"
+    echo -e "8️⃣ OSINT Harvesting"
+    echo -e "9️⃣ Directory Brute Force"
+    echo -e "🔟 Generate HTML Report"
+    echo -e "1️⃣1️⃣ Run All"
+    echo -e "1️⃣2️⃣ Exit"
     read -p "Enter choice: " choice
     case "$choice" in
         1) subdomain_scan ;;
@@ -160,14 +153,13 @@ while true; do
         3) web_scan ;;
         4) nmap_scan ;;
         5) ssl_scan ;;
-        6) wayback_scrape ;;
-        7) cms_detection ;;
-        8) open_ports ;;
-        9) osint_scan ;;
-        10) directory_brute_force ;;
-        11) generate_report ;;
-        12) subdomain_scan; dns_scan; web_scan; nmap_scan; ssl_scan; wayback_scrape; cms_detection; open_ports; osint_scan; directory_brute_force; generate_report ;;
-        13) log "Exiting..."; exit ;;
+        6) cms_detection ;;
+        7) open_ports ;;
+        8) osint_scan ;;
+        9) directory_brute_force ;;
+        10) generate_report ;;
+        11) subdomain_scan; dns_scan; web_scan; nmap_scan; ssl_scan; cms_detection; open_ports; osint_scan; directory_brute_force; generate_report ;;
+        12) log "Exiting..."; exit ;;
         *) echo -e "${RED}Invalid option! Try again.${RESET}" ;;
     esac
 done
