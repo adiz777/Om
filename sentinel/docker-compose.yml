@@ -1,0 +1,43 @@
+services:
+  sentinel:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: om-sentinel:local
+    container_name: om-sentinel
+    restart: unless-stopped
+    ports:
+      - "${OM_SENTINEL_PORT:-8787}:8787"
+    environment:
+      OM_SENTINEL_API_KEY: ${OM_SENTINEL_API_KEY:?Set OM_SENTINEL_API_KEY in your environment}
+      OM_SENTINEL_DB_PATH: /app/data/sentinel.db
+      OM_AI_PROVIDER: ${OM_AI_PROVIDER:-ollama}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen2.5:7b}
+      FREELLMAPI_BASE_URL: ${FREELLMAPI_BASE_URL:-}
+      FREELLMAPI_API_KEY: ${FREELLMAPI_API_KEY:-}
+      FREELLMAPI_MODEL: ${FREELLMAPI_MODEL:-auto}
+      OPENAI_COMPAT_BASE_URL: ${OPENAI_COMPAT_BASE_URL:-}
+      OPENAI_COMPAT_API_KEY: ${OPENAI_COMPAT_API_KEY:-}
+      OPENAI_COMPAT_MODEL: ${OPENAI_COMPAT_MODEL:-auto}
+      NVD_API_KEY: ${NVD_API_KEY:-}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - sentinel_data:/app/data
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp:size=32m,noexec,nosuid
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8787/api/health', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  sentinel_data:
