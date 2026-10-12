@@ -57,3 +57,8 @@ Contributions are welcome! Feel free to open issues or submit pull requests.
 
 **Created by:** MAJOR_ADI ❤️
 
+## Om Sentinel (hybrid extension)
+
+The original Bash-based reconnaissance tool remains available as `Om.sh`. A new additive prototype lives in [`sentinel/`](sentinel/README.md), providing a web dashboard and CLI for passive public-data enrichment, optional NVD CVE keyword search, CISA KEV catalogue metadata, certificate-transparency records, and optional FreeLLMAPI-compatible AI summaries.
+
+Start with the [Om Sentinel setup guide](sentinel/README.md). The prototype binds to localhost by default and requires an API key for enrichment. It does not yet orchestrate every legacy scanner; active scanner integration and persistent scan history remain future work. Use only against domains you own or are explicitly authorised to assess.
