@@ -1,6 +1,10 @@
 """CLI client for a running Om Sentinel API."""
 import argparse, json, os, sys
+from pathlib import Path
+from dotenv import load_dotenv
 import httpx
+
+load_dotenv(Path(__file__).resolve().parent / ".env", override=False)
 
 def main():
     parser = argparse.ArgumentParser(description="Om Sentinel passive enrichment CLI")
@@ -11,7 +15,7 @@ def main():
     args = parser.parse_args()
     key = os.getenv("OM_SENTINEL_API_KEY", "")
     if not key:
-        parser.error("Set OM_SENTINEL_API_KEY in the environment")
+        parser.error("Set OM_SENTINEL_API_KEY in sentinel/.env or the environment")
     try:
         response = httpx.post(args.url.rstrip("/") + "/api/enrich", headers={"X-Om-Api-Key": key}, json={"domain": args.domain, "cve_keyword": args.cve_keyword, "use_ai": not args.no_ai}, timeout=40)
         response.raise_for_status()
