@@ -1,0 +1,49 @@
+name: Om 2.0 CI
+
+on:
+  push:
+    branches: ["main", "feat/**"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Shell script syntax check (bash -n)
+        run: |
+          bash -n Om.sh
+          bash -n om_recon.sh
+          bash -n scripts/legacy/Om.sh
+
+      - name: Static analysis & security lint (Ruff)
+        run: ruff check om tests
+
+      - name: Run unit, integration, and API test suite (Pytest)
+        run: pytest -v
+
+      - name: Verify CLI entrypoint & tool diagnostics
+        run: |
+          python -m om --version
+          python -m om --check-tools

@@ -1,0 +1,97 @@
+{
+  "schema_version": "2.0",
+  "tool_name": "Om",
+  "tool_version": "2.0.0",
+  "author": "Major_ADI",
+  "session_id": "example.com_20261028T120000Z_a1b2c3",
+  "status": "completed",
+  "target": "example.com",
+  "target_type": "domain",
+  "profile": "medium",
+  "scope": [
+    "example.com",
+    "*.example.com"
+  ],
+  "started_at": "2026-10-28T12:00:00+00:00",
+  "completed_at": "2026-10-28T12:00:18+00:00",
+  "duration_seconds": 18.42,
+  "summary": {
+    "total_tools": 4,
+    "tool_status_counts": {
+      "completed": 4
+    },
+    "total_findings": 5,
+    "confirmed_findings": 4,
+    "inferred_or_unverified_findings": 1,
+    "confirmed_issues": 1,
+    "findings_by_category": {
+      "subdomain": 2,
+      "dns_record": 1,
+      "open_port": 1,
+      "tls": 1
+    },
+    "error_count": 0
+  },
+  "tools": [
+    {
+      "tool": "amass",
+      "module_group": "subdomains",
+      "category": "Subdomains",
+      "traffic_mode": "passive",
+      "estimated_impact": "low",
+      "status": "completed",
+      "command": [
+        "/usr/bin/amass",
+        "enum",
+        "-passive",
+        "-d",
+        "example.com"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-10-28T12:00:00+00:00",
+      "ended_at": "2026-10-28T12:00:05+00:00",
+      "duration_seconds": 5.1,
+      "stdout_file": "Subdomains/amass.txt",
+      "version": "v4.2.0",
+      "error": null,
+      "install_hint": null,
+      "limitations": "Passive mode queries public certificate & DNS datasets; discovered hosts may not resolve.",
+      "findings_count": 2,
+      "stdout_preview": "api.example.com\ndev.example.com\n",
+      "stderr_preview": ""
+    }
+  ],
+  "findings": [
+    {
+      "category": "subdomain",
+      "value": "api.example.com",
+      "classification": "normalised_finding",
+      "confidence": "confirmed",
+      "severity": "info",
+      "source_tool": "amass, dnsrecon",
+      "timestamp": "2026-10-28T12:00:05+00:00",
+      "evidence": "Resolved host 'api.example.com' via dnsrecon",
+      "detail": "Resolved via DNS enumeration",
+      "limitations": "Confirmed in DNS at scan time.",
+      "remediation": ""
+    },
+    {
+      "category": "tls",
+      "value": "TLSv1.0   enabled",
+      "classification": "confirmed_issue",
+      "confidence": "confirmed",
+      "severity": "medium",
+      "source_tool": "sslscan",
+      "timestamp": "2026-10-28T12:00:12+00:00",
+      "evidence": "TLSv1.0   enabled",
+      "detail": "Deprecated TLS/SSL protocol enabled",
+      "limitations": "Handshake accepted by target port.",
+      "remediation": "Disable SSLv2, SSLv3, TLSv1.0, and TLSv1.1; enforce TLSv1.2 and TLSv1.3 only."
+    }
+  ],
+  "errors": [],
+  "limitations": [
+    "Reconnaissance observations record point-in-time surface metadata and do not prove exploitability.",
+    "Subdomain and OSINT results marked 'unverified' or 'inferred' must be validated against an authorised inventory."
+  ]
+}
