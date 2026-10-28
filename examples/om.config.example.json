@@ -1,0 +1,31 @@
+{
+  "output_dir": "om_reports",
+  "db_path": "om_reports/om_history.db",
+  "profile": "low",
+  "modules": [
+    "subdomains",
+    "dns",
+    "webtech",
+    "ssl",
+    "cms",
+    "osint"
+  ],
+  "scope": [
+    "example.com",
+    "*.example.com"
+  ],
+  "authorize_active": false,
+  "timeout": 90,
+  "concurrency": 2,
+  "rate_limit": 5,
+  "retention_days": 90,
+  "max_sessions": 250,
+  "wordlist": "/usr/share/wordlists/dirb/common.txt",
+  "tool_paths": {},
+  "report_formats": [
+    "html",
+    "json",
+    "csv"
+  ],
+  "archive_zip": true
+}

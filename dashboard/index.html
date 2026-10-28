@@ -1,0 +1,1379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>OM 2.0 · Automated Reconnaissance &amp; Intelligence Platform</title>
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #050914;
+  --bg-elevated: #0a1222;
+  --panel: #0e182c;
+  --panel-alt: #13213c;
+  --border: #1e3256;
+  --border-bright: #2d4a7c;
+  --text: #eaf2ff;
+  --muted: #8ea4c8;
+  --blue: #38bdf8;
+  --blue-strong: #0284c7;
+  --gold: #eab308;
+  --ok: #22c55e;
+  --warn: #f59e0b;
+  --err: #ef4444;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: radial-gradient(circle at 85% 0%, #0f2347 0%, var(--bg) 55%);
+  color: var(--text);
+  font: 14px/1.55 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.topbar {
+  background: rgba(10, 18, 34, 0.92);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  backdrop-filter: blur(8px);
+}
+.brand-wrap { display: flex; align-items: center; gap: 14px; }
+.brand-logo {
+  font-weight: 900;
+  font-size: 20px;
+  letter-spacing: 0.14em;
+  color: var(--text);
+}
+.brand-logo span { color: var(--blue); }
+.brand-logo sup { color: var(--gold); font-size: 11px; letter-spacing: 0.06em; margin-left: 4px; }
+.brand-tag {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border-bright);
+  color: var(--gold);
+  background: rgba(234, 179, 8, 0.08);
+}
+.top-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.top-controls input {
+  width: 210px;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+.layout {
+  display: grid;
+  grid-template-columns: 235px 1fr;
+  flex: 1;
+  max-width: 1600px;
+  width: 100%;
+  margin: 0 auto;
+}
+nav.sidebar {
+  background: var(--bg-elevated);
+  border-right: 1px solid var(--border);
+  padding: 18px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.nav-section {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  padding: 10px 10px 4px;
+  font-weight: 700;
+}
+.nav-btn {
+  appearance: none;
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid transparent;
+  text-align: left;
+  padding: 9px 12px;
+  border-radius: 8px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+.nav-btn:hover {
+  background: rgba(56, 189, 248, 0.07);
+  color: var(--text);
+}
+.nav-btn.active {
+  background: rgba(56, 189, 248, 0.14);
+  color: var(--blue);
+  border-color: rgba(56, 189, 248, 0.35);
+}
+main.content {
+  padding: 24px 28px 48px;
+  min-width: 0;
+}
+.view-pane { display: none; }
+.view-pane.active { display: block; }
+.page-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 14px;
+}
+.page-head h1 { margin: 0; font-size: 22px; letter-spacing: -0.01em; }
+.page-head p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.kpi-card {
+  background: linear-gradient(155deg, var(--panel) 0%, var(--bg-elevated) 100%);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  padding: 15px 18px;
+}
+.kpi-card span {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+.kpi-card strong {
+  display: block;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--blue);
+  margin-top: 4px;
+}
+.kpi-card strong.gold { color: var(--gold); }
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 18px;
+  margin-bottom: 20px;
+}
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 18px;
+  min-width: 0;
+}
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.card-head h2 { margin: 0; font-size: 15px; font-weight: 700; }
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #c5d6f0;
+  margin: 12px 0 5px;
+}
+input, select, textarea {
+  width: 100%;
+  background: #070e1b;
+  border: 1px solid var(--border-bright);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 9px 11px;
+  font: inherit;
+}
+input:focus, select:focus, textarea:focus {
+  outline: 2px solid var(--blue);
+  border-color: transparent;
+}
+input[type="checkbox"] { width: auto; margin-right: 7px; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(90deg, var(--blue-strong), var(--blue));
+  color: #03101f;
+  font-weight: 700;
+  border: 0;
+  border-radius: 8px;
+  padding: 9px 15px;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn.secondary {
+  background: var(--panel-alt);
+  color: var(--text);
+  border: 1px solid var(--border-bright);
+}
+.btn.danger {
+  background: rgba(239, 68, 68, 0.16);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td {
+  text-align: left;
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+th {
+  background: var(--panel-alt);
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+code {
+  font-family: var(--mono);
+  font-size: 12px;
+  background: rgba(15, 23, 42, 0.7);
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+pre {
+  margin: 0;
+  padding: 12px;
+  background: #050912;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: #dbeafe;
+  font-family: var(--mono);
+  font-size: 12px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 360px;
+}
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  background: #1e293b;
+  color: var(--text);
+}
+.badge-ok { background: rgba(34, 197, 94, 0.16); color: #86efac; border: 1px solid rgba(34, 197, 94, 0.35); }
+.badge-warn { background: rgba(245, 158, 11, 0.16); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.35); }
+.badge-err { background: rgba(239, 68, 68, 0.16); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.35); }
+.badge-info { background: rgba(56, 189, 248, 0.16); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.35); }
+.badge-muted { background: #131d31; color: var(--muted); }
+.muted { color: var(--muted); }
+.gold-text { color: var(--gold); }
+.alert {
+  padding: 12px 14px;
+  border-radius: 9px;
+  margin: 12px 0;
+  font-size: 13px;
+  border: 1px solid var(--border-bright);
+  background: var(--bg-elevated);
+}
+.alert.warn { border-color: rgba(245, 158, 11, 0.45); background: rgba(245, 158, 11, 0.08); color: #fde68a; }
+.alert.err { border-color: rgba(239, 68, 68, 0.45); background: rgba(239, 68, 68, 0.08); color: #fecaca; }
+.alert.ok { border-color: rgba(34, 197, 94, 0.45); background: rgba(34, 197, 94, 0.08); color: #bbf7d0; }
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+.check-tile {
+  background: #070e1b;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; }
+.bar-label { width: 120px; color: var(--muted); font-family: var(--mono); }
+.bar-track { flex: 1; height: 8px; background: #070e1b; border-radius: 99px; overflow: hidden; }
+.bar-fill { height: 100%; background: linear-gradient(90deg, var(--blue-strong), var(--blue)); }
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  nav.sidebar { flex-direction: row; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--border); }
+  .nav-section { display: none; }
+  .grid-2 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand-wrap">
+    <div class="brand-logo">OM <span>2.0</span><sup>MAJOR_ADI</sup></div>
+    <span class="brand-tag">Authorised Reconnaissance &amp; Intelligence</span>
+  </div>
+  <div class="top-controls">
+    <input id="apiKeyInput" type="password" autocomplete="off" placeholder="Optional X-Om-Api-Key (if set)">
+    <button id="refreshBtn" class="btn secondary" type="button">Refresh Data</button>
+    <span id="globalStatus" class="muted" style="font-size:12px;" role="status">Connected (127.0.0.1)</span>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" aria-label="Main Navigation">
+    <div class="nav-section">Operations</div>
+    <button class="nav-btn active" data-view="overview" type="button"><span>Overview</span></button>
+    <button class="nav-btn" data-view="new-scan" type="button"><span>New Scan</span></button>
+    <button class="nav-btn" data-view="scan-details" type="button"><span>Scan Details</span></button>
+
+    <div class="nav-section">Intelligence Views</div>
+    <button class="nav-btn" data-view="domain-intel" type="button"><span>Domain Intelligence</span></button>
+    <button class="nav-btn" data-view="network-intel" type="button"><span>Network Intelligence</span></button>
+    <button class="nav-btn" data-view="web-intel" type="button"><span>Web Intelligence</span></button>
+
+    <div class="nav-section">Analysis &amp; System</div>
+    <button class="nav-btn" data-view="reports" type="button"><span>Reports &amp; Diff</span></button>
+    <button class="nav-btn" data-view="settings" type="button"><span>Settings &amp; Modules</span></button>
+  </nav>
+
+  <main class="content">
+    <!-- 1. OVERVIEW -->
+    <section id="view-overview" class="view-pane active">
+      <div class="page-head">
+        <div>
+          <h1>Reconnaissance Overview</h1>
+          <p>Live scan sessions, module readiness, and normalised intelligence observations.</p>
+        </div>
+        <button class="btn" type="button" data-goto="new-scan">+ Launch New Scan</button>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card"><span>Recorded Sessions</span><strong id="kpiSessions">0</strong></div>
+        <div class="kpi-card"><span>Unique Targets</span><strong id="kpiTargets">0</strong></div>
+        <div class="kpi-card"><span>Active Running Scans</span><strong id="kpiActive" class="gold">0</strong></div>
+        <div class="kpi-card"><span>Installed Modules</span><strong id="kpiModules">0 / 10</strong></div>
+      </div>
+
+      <div id="activeScansBanner"></div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head"><h2>Recent Scan Sessions</h2></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Target</th><th>Profile</th><th>Status</th><th>Findings</th><th>Started (UTC)</th><th>Action</th></tr></thead>
+              <tbody id="overviewSessionsBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h2>Observation Distribution &amp; Module Readiness</h2></div>
+          <div id="overviewCategoryBars" style="margin-bottom:18px;"></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Module</th><th>Group</th><th>Traffic</th><th>Status</th></tr></thead>
+              <tbody id="overviewModulesBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h2>Recent Normalised Findings</h2></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Target</th><th>Category</th><th>Observation</th><th>Classification</th><th>Confidence</th><th>Severity</th><th>Source</th></tr></thead>
+            <tbody id="overviewFindingsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. NEW SCAN -->
+    <section id="view-new-scan" class="view-pane">
+      <div class="page-head">
+        <div>
+          <h1>New Authorised Reconnaissance Scan</h1>
+          <p>Validate target scope, preview planned modules, and confirm authorisation before execution.</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head"><h2>1. Target, Scope &amp; Profile Configuration</h2></div>
+          <form id="newScanForm">
+            <label for="scanTarget">Authorised Target (Domain, Subdomain, IPv4/IPv6, CIDR, or URL)</label>
+            <input id="scanTarget" required placeholder="example.com or 192.0.2.0/24" autocomplete="off">
+
+            <label for="scanScope">Declared Authorised Scope (comma-separated domains, *.wildcards, IPs, or CIDRs)</label>
+            <input id="scanScope" placeholder="example.com, *.example.com">
+
+            <div class="grid-2" style="gap:12px;margin-bottom:0;">
+              <div>
+                <label for="scanProfile">Scanning Profile</label>
+                <select id="scanProfile">
+                  <option value="low">Low — Conservative / Passive &amp; Light Checks</option>
+                  <option value="medium">Medium — Balanced Reconnaissance (+ Nmap Top 100)</option>
+                  <option value="high">High — Comprehensive Scoped Assessment (+ Gobuster)</option>
+                </select>
+              </div>
+              <div>
+                <label for="scanConcurrency">Concurrent Module Workers (1–8)</label>
+                <input id="scanConcurrency" type="number" min="1" max="8" value="2">
+              </div>
+            </div>
+
+            <div class="grid-2" style="gap:12px;margin-bottom:0;">
+              <div>
+                <label for="scanTimeout">Per-Module Timeout (seconds)</label>
+                <input id="scanTimeout" type="number" min="5" max="3600" value="90">
+              </div>
+              <div>
+                <label for="scanRate">Max Request / Packet Rate (per sec)</label>
+                <input id="scanRate" type="number" min="1" max="500" value="5">
+              </div>
+            </div>
+
+            <label>Select Modules (leave all unchecked to use Profile Defaults)</label>
+            <div class="checkbox-grid" id="scanModuleCheckboxes"></div>
+
+            <label style="margin-top:16px;">
+              <input id="scanAuthActive" type="checkbox">
+              I confirm explicit written authorisation to assess this target and run active probes (required for <code>nmap</code> / <code>gobuster</code>).
+            </label>
+
+            <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
+              <button id="previewScanBtn" class="btn secondary" type="button">Preview Scope &amp; Plan</button>
+              <button id="launchScanBtn" class="btn" type="submit">Confirm &amp; Execute Scan</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h2>2. Scope Verification &amp; Execution Preview</h2></div>
+          <div id="scanPreviewBox" class="alert">
+            Enter a target and click <strong>Preview Scope &amp; Plan</strong> to inspect target normalisation, active authorisation requirements, and planned module commands before running.
+          </div>
+          <div id="scanExecutionResult"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. SCAN DETAILS -->
+    <section id="view-scan-details" class="view-pane">
+      <div class="page-head">
+        <div>
+          <h1>Scan Session Details</h1>
+          <p>Execution timeline, per-module exit codes, filtered observations, and raw tool outputs.</p>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <select id="detailSessionSelect" style="width:300px;"></select>
+          <button id="detailExportHtml" class="btn secondary" type="button">Export HTML</button>
+          <button id="detailExportJson" class="btn secondary" type="button">Export JSON</button>
+          <button id="detailExportCsv" class="btn secondary" type="button">Export CSV</button>
+        </div>
+      </div>
+
+      <div id="detailMetaContainer"></div>
+
+      <div class="card">
+        <div class="card-head"><h2>Module Execution Timeline &amp; Status</h2></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Module</th><th>Category</th><th>Status</th><th>Traffic</th><th>Exit Code</th><th>Duration</th><th>Findings</th><th>Diagnostic / Error</th></tr></thead>
+            <tbody id="detailToolsBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>Session Findings &amp; Observations</h2>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <input id="detailFilterText" placeholder="Search indicator or source..." style="width:220px;">
+            <select id="detailFilterConf" style="width:150px;">
+              <option value="">All Confidence</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="inferred">Inferred</option>
+              <option value="unverified">Unverified</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Category</th><th>Value</th><th>Classification</th><th>Confidence</th><th>Severity</th><th>Source(s)</th><th>Details &amp; Evidence</th></tr></thead>
+            <tbody id="detailFindingsBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h2>Raw Module Output Logs (Sanitised)</h2></div>
+        <div id="detailRawOutputs"></div>
+      </div>
+    </section>
+
+    <!-- 4. DOMAIN INTELLIGENCE -->
+    <section id="view-domain-intel" class="view-pane">
+      <div class="page-head">
+        <div>
+          <h1>Domain &amp; DNS Intelligence</h1>
+          <p>Discovered subdomains, DNS records (A, AAAA, MX, NS, TXT, SOA, SRV, AXFR), and harvested OSINT emails.</p>
+        </div>
+        <input id="domainFilterInput" placeholder="Filter by domain or record..." style="width:250px;">
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Target</th><th>Category</th><th>Subdomain / DNS Record / Email</th><th>Confidence</th><th>Severity</th><th>Source Module</th><th>Timestamp (UTC)</th><th>Details</th></tr></thead>
+            <tbody id="domainIntelBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. NETWORK INTELLIGENCE -->
+    <section id="view-network-intel" class="view-pane">
+      <div class="page-head">
+        <div>
+          <h1>Network &amp; Port Intelligence</h1>
+          <p>Open TCP/UDP ports, detected service versions, and associated host IP observations.</p>
+        </div>
+        <input id="networkFilterInput" placeholder="Filter by port, service, or IP..." style="width:250px;">
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Target</th><th>Category</th><th>Port / Service / IP</th><th>Classification</th><th>Confidence</th><th>Severity</th><th>Scanner</th><th>Service Version &amp; Notes</th></tr></thead>
+            <tbody id="networkIntelBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. WEB INTELLIGENCE -->
+    <section id="view-web-intel" class="view-pane">
+      <div class="page-head">
+        <div>
+          <h1>Web, WAF, CMS &amp; TLS Intelligence</h1>
+          <p>HTTP technology stacks, WAF detections, CMS indicators, TLS protocol/certificate observations, and discovered paths.</p>
+        </div>
+        <input id="webFilterInput" placeholder="Filter web observations..." style="width:250px;">
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Target</th><th>Category</th><th>Observation</th><th>Classification</th><th>Confidence</th><th>Severity</th><th>Source Module</th><th>Details &amp; Remediation</th></tr></thead>
+            <tbody id="webIntelBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. REPORTS & DIFF -->
+    <section id="view-reports" class="view-pane">
+      <div class="page-head">
+        <div>
+          <h1>Reports &amp; Session Comparison</h1>
+          <p>Export self-contained HTML, versioned JSON (v2.0), or CSV reports, and diff any two scan sessions.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h2>Compare Two Scan Sessions (Diff)</h2></div>
+        <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;">
+          <div style="flex:1;min-width:240px;">
+            <label for="diffBaseSelect">Baseline Session (Older)</label>
+            <select id="diffBaseSelect"></select>
+          </div>
+          <div style="flex:1;min-width:240px;">
+            <label for="diffTargetSelect">Comparison Session (Newer)</label>
+            <select id="diffTargetSelect"></select>
+          </div>
+          <button id="runDiffBtn" class="btn" type="button">Compare Sessions</button>
+        </div>
+        <div id="diffResultContainer" style="margin-top:16px;"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h2>All Saved Scan Sessions &amp; Exports</h2></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Session ID</th><th>Target</th><th>Profile</th><th>Status</th><th>Findings (Confirmed)</th><th>Started (UTC)</th><th>Exports</th></tr></thead>
+            <tbody id="reportsSessionsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. SETTINGS -->
+    <section id="view-settings" class="view-pane">
+      <div class="page-head">
+        <div>
+          <h1>Platform Settings &amp; Module Availability</h1>
+          <p>Configure default profiles, timeouts, concurrency limits, output paths, and retention policies.</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head"><h2>Engine &amp; Storage Configuration</h2></div>
+          <form id="settingsForm">
+            <label for="setOutputDir">Output Directory</label>
+            <input id="setOutputDir" required>
+
+            <div class="grid-2" style="gap:12px;margin-bottom:0;">
+              <div>
+                <label for="setProfile">Default Profile</label>
+                <select id="setProfile">
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+              <div>
+                <label for="setConcurrency">Default Concurrency (1–8)</label>
+                <input id="setConcurrency" type="number" min="1" max="8">
+              </div>
+            </div>
+
+            <div class="grid-2" style="gap:12px;margin-bottom:0;">
+              <div>
+                <label for="setTimeout">Default Module Timeout (5–3600s)</label>
+                <input id="setTimeout" type="number" min="5" max="3600">
+              </div>
+              <div>
+                <label for="setRateLimit">Default Rate Limit (1–500 rps)</label>
+                <input id="setRateLimit" type="number" min="1" max="500">
+              </div>
+            </div>
+
+            <div class="grid-2" style="gap:12px;margin-bottom:0;">
+              <div>
+                <label for="setRetentionDays">SQLite Retention (Days)</label>
+                <input id="setRetentionDays" type="number" min="1" max="3650">
+              </div>
+              <div>
+                <label for="setMaxSessions">Max Stored Sessions</label>
+                <input id="setMaxSessions" type="number" min="10" max="10000">
+              </div>
+            </div>
+
+            <label for="setWordlist">Gobuster Wordlist Path</label>
+            <input id="setWordlist">
+
+            <label style="margin-top:12px;">
+              <input id="setArchiveZip" type="checkbox">
+              Automatically create a <code>.zip</code> archive of each completed session directory
+            </label>
+
+            <div style="margin-top:14px;">
+              <button class="btn" type="submit">Save &amp; Validate Configuration</button>
+            </div>
+          </form>
+          <div id="settingsStatusBox"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h2>External Reconnaissance Module Diagnostics</h2></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Module</th><th>Group</th><th>Binary / Version</th><th>Installation Hint</th></tr></thead>
+              <tbody id="settingsModulesBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+const $ = (sel) => document.querySelector(sel);
+const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+
+const state = {
+  overview: null,
+  sessions: [],
+  currentSessionDoc: null,
+  domainIntel: [],
+  networkIntel: [],
+  webIntel: [],
+  settings: null,
+};
+
+function apiHeaders(extra = {}) {
+  const key = $('#apiKeyInput').value.trim();
+  const h = { ...extra };
+  if (key) h['X-Om-Api-Key'] = key;
+  return h;
+}
+
+async function apiFetch(path, options = {}) {
+  const res = await fetch(path, {
+    ...options,
+    headers: apiHeaders(options.headers || {}),
+  });
+  const data = await res.json().catch(() => ({ detail: 'Non-JSON response from server' }));
+  if (!res.ok) {
+    throw new Error(data.detail || `HTTP ${res.status}`);
+  }
+  return data;
+}
+
+function el(tag, attrs = {}, children = []) {
+  const node = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'className') node.className = v;
+    else if (k === 'textContent') node.textContent = v;
+    else if (k === 'onclick') node.onclick = v;
+    else node.setAttribute(k, v);
+  }
+  for (const c of children) {
+    if (typeof c === 'string') node.appendChild(document.createTextNode(c));
+    else if (c) node.appendChild(c);
+  }
+  return node;
+}
+
+function statusBadge(status) {
+  const map = {
+    completed: 'badge-ok',
+    partial: 'badge-warn',
+    running: 'badge-info',
+    failed: 'badge-err',
+    timed_out: 'badge-warn',
+    cancelled: 'badge-warn',
+    skipped: 'badge-muted',
+    skipped_missing: 'badge-muted',
+    skipped_target_type: 'badge-muted',
+  };
+  return el('span', { className: `badge ${map[status] || 'badge-muted'}`, textContent: status || 'unknown' });
+}
+
+function sevBadge(sev) {
+  const map = { high: 'badge-err', medium: 'badge-warn', low: 'badge-info', info: 'badge-muted' };
+  return el('span', { className: `badge ${map[sev] || 'badge-muted'}`, textContent: sev || 'info' });
+}
+
+function confBadge(conf) {
+  const cls = conf === 'confirmed' ? 'badge-ok' : 'badge-warn';
+  return el('span', { className: `badge ${cls}`, textContent: conf || 'unverified' });
+}
+
+function switchView(viewName) {
+  $$('.nav-btn').forEach((b) => b.classList.toggle('active', b.dataset.view === viewName));
+  $$('.view-pane').forEach((p) => p.classList.toggle('active', p.id === `view-${viewName}`));
+  if (viewName === 'domain-intel') loadIntelligence('domain');
+  if (viewName === 'network-intel') loadIntelligence('network');
+  if (viewName === 'web-intel') loadIntelligence('web');
+  if (viewName === 'settings') loadSettings();
+}
+
+$$('.nav-btn').forEach((btn) => {
+  btn.addEventListener('click', () => switchView(btn.dataset.view));
+});
+$$('[data-goto]').forEach((btn) => {
+  btn.addEventListener('click', () => switchView(btn.dataset.goto));
+});
+
+async function downloadExport(sessionId, fmt) {
+  try {
+    const res = await fetch(`/api/scans/${encodeURIComponent(sessionId)}/export?format=${encodeURIComponent(fmt)}`, {
+      headers: apiHeaders(),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || 'Export failed');
+    }
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `om-report-${sessionId}.${fmt}`;
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (err) {
+    $('#globalStatus').textContent = `Export error: ${err.message}`;
+  }
+}
+
+async function loadOverview() {
+  try {
+    const data = await apiFetch('/api/overview');
+    state.overview = data;
+    state.sessions = data.recent_sessions || [];
+
+    $('#kpiSessions').textContent = String(data.total_sessions || 0);
+    $('#kpiTargets').textContent = String(data.unique_targets || 0);
+    $('#kpiActive').textContent = String((data.active_scans || []).length);
+    $('#kpiModules').textContent = `${data.modules.installed} / ${data.modules.total}`;
+
+    // Active scans banner
+    const activeWrap = $('#activeScansBanner');
+    activeWrap.replaceChildren();
+    for (const act of data.active_scans || []) {
+      const box = el('div', { className: 'alert warn' }, [
+        el('strong', { textContent: `Active Scan Running: ${act.target} (${act.session_id}) ` }),
+        `— ${act.completed_modules}/${act.total_modules} modules finished. `,
+      ]);
+      const cancelBtn = el('button', {
+        className: 'btn danger',
+        textContent: 'Cancel Scan',
+        onclick: async () => {
+          await apiFetch(`/api/scans/${encodeURIComponent(act.session_id)}/cancel`, { method: 'POST' });
+          await loadOverview();
+        },
+      });
+      box.appendChild(cancelBtn);
+      activeWrap.appendChild(box);
+    }
+
+    // Recent sessions table
+    const sBody = $('#overviewSessionsBody');
+    sBody.replaceChildren();
+    if (!state.sessions.length) {
+      sBody.appendChild(el('tr', {}, [el('td', { colspan: '6', className: 'muted', textContent: 'No scan sessions recorded yet. Launch a scan from the New Scan tab.' })]));
+    } else {
+      for (const s of state.sessions) {
+        const viewBtn = el('button', {
+          className: 'btn secondary',
+          textContent: 'Inspect',
+          onclick: () => openSessionDetail(s.session_id),
+        });
+        sBody.appendChild(el('tr', {}, [
+          el('td', {}, [el('strong', { textContent: s.target })]),
+          el('td', {}, [el('code', { textContent: s.profile.toUpperCase() })]),
+          el('td', {}, [statusBadge(s.status)]),
+          el('td', { textContent: `${s.total_findings} (${s.confirmed_findings} confirmed)` }),
+          el('td', { className: 'muted', textContent: s.started_at.replace('T', ' ').slice(0, 19) }),
+          el('td', {}, [viewBtn]),
+        ]));
+      }
+    }
+
+    // Category distribution bars
+    const barsWrap = $('#overviewCategoryBars');
+    barsWrap.replaceChildren();
+    const catEntries = Object.entries(data.category_totals || {});
+    const maxCount = Math.max(1, ...catEntries.map(([, c]) => c));
+    if (!catEntries.length) {
+      barsWrap.appendChild(el('p', { className: 'muted', textContent: 'No observations recorded yet.' }));
+    } else {
+      for (const [cat, count] of catEntries) {
+        const pct = Math.round((count / maxCount) * 100);
+        const fill = el('div', { className: 'bar-fill' });
+        fill.style.width = `${pct}%`;
+        barsWrap.appendChild(el('div', { className: 'bar-row' }, [
+          el('span', { className: 'bar-label', textContent: cat }),
+          el('div', { className: 'bar-track' }, [fill]),
+          el('strong', { textContent: String(count) }),
+        ]));
+      }
+    }
+
+    // Modules table & checkboxes
+    const mBody = $('#overviewModulesBody');
+    mBody.replaceChildren();
+    const checkContainer = $('#scanModuleCheckboxes');
+    if (!checkContainer.children.length) {
+      const seenGroups = new Set();
+      for (const m of data.modules.items) {
+        if (!seenGroups.has(m.module_group)) {
+          seenGroups.add(m.module_group);
+          const cb = el('input', { type: 'checkbox', value: m.module_group, className: 'mod-group-cb' });
+          checkContainer.appendChild(el('label', { className: 'check-tile' }, [
+            cb,
+            el('span', { textContent: `${m.module_group} (${m.traffic_mode})` }),
+          ]));
+        }
+      }
+    }
+    for (const m of data.modules.items) {
+      mBody.appendChild(el('tr', {}, [
+        el('td', {}, [el('strong', { textContent: m.name })]),
+        el('td', {}, [el('code', { textContent: m.module_group })]),
+        el('td', { className: 'muted', textContent: m.traffic_mode }),
+        el('td', {}, [
+          el('span', {
+            className: `badge ${m.installed ? 'badge-ok' : 'badge-muted'}`,
+            textContent: m.installed ? 'INSTALLED' : 'MISSING',
+          }),
+        ]),
+      ]));
+    }
+
+    // Recent findings
+    const fBody = $('#overviewFindingsBody');
+    fBody.replaceChildren();
+    if (!(data.recent_findings || []).length) {
+      fBody.appendChild(el('tr', {}, [el('td', { colspan: '7', className: 'muted', textContent: 'No findings recorded yet.' })]));
+    } else {
+      for (const f of data.recent_findings) {
+        fBody.appendChild(el('tr', {}, [
+          el('td', {}, [el('strong', { textContent: f.target })]),
+          el('td', {}, [el('code', { textContent: f.category })]),
+          el('td', { textContent: f.value }),
+          el('td', {}, [el('code', { textContent: f.classification || 'normalised_finding' })]),
+          el('td', {}, [confBadge(f.confidence)]),
+          el('td', {}, [sevBadge(f.severity)]),
+          el('td', { className: 'muted', textContent: f.source_tool }),
+        ]));
+      }
+    }
+
+    await populateSessionSelectors();
+    $('#globalStatus').textContent = 'Synchronised with local engine';
+  } catch (err) {
+    $('#globalStatus').textContent = `Error: ${err.message}`;
+  }
+}
+
+async function populateSessionSelectors() {
+  const data = await apiFetch('/api/scans?limit=100');
+  const list = data.sessions || [];
+  const selects = [$('#detailSessionSelect'), $('#diffBaseSelect'), $('#diffTargetSelect')];
+  for (const sel of selects) {
+    const prev = sel.value;
+    sel.replaceChildren();
+    for (const s of list) {
+      sel.appendChild(el('option', {
+        value: s.session_id,
+        textContent: `${s.target} · ${s.profile.toUpperCase()} · ${s.started_at.slice(0, 19)} (${s.total_findings} findings)`,
+      }));
+    }
+    if (prev && list.some((x) => x.session_id === prev)) sel.value = prev;
+  }
+  if (list.length > 1 && $('#diffBaseSelect').value === $('#diffTargetSelect').value) {
+    $('#diffBaseSelect').value = list[1].session_id;
+    $('#diffTargetSelect').value = list[0].session_id;
+  }
+
+  // Reports sessions table
+  const rBody = $('#reportsSessionsBody');
+  rBody.replaceChildren();
+  if (!list.length) {
+    rBody.appendChild(el('tr', {}, [el('td', { colspan: '7', className: 'muted', textContent: 'No saved sessions available.' })]));
+  } else {
+    for (const s of list) {
+      const actions = el('div', { style: 'display:flex;gap:6px;flex-wrap:wrap;' }, [
+        el('button', { className: 'btn secondary', textContent: 'HTML', onclick: () => downloadExport(s.session_id, 'html') }),
+        el('button', { className: 'btn secondary', textContent: 'JSON', onclick: () => downloadExport(s.session_id, 'json') }),
+        el('button', { className: 'btn secondary', textContent: 'CSV', onclick: () => downloadExport(s.session_id, 'csv') }),
+        el('button', { className: 'btn secondary', textContent: 'Details', onclick: () => openSessionDetail(s.session_id) }),
+      ]);
+      rBody.appendChild(el('tr', {}, [
+        el('td', {}, [el('code', { textContent: s.session_id })]),
+        el('td', {}, [el('strong', { textContent: s.target })]),
+        el('td', {}, [el('code', { textContent: s.profile.toUpperCase() })]),
+        el('td', {}, [statusBadge(s.status)]),
+        el('td', { textContent: `${s.total_findings} (${s.confirmed_findings})` }),
+        el('td', { className: 'muted', textContent: s.started_at.replace('T', ' ').slice(0, 19) }),
+        el('td', {}, [actions]),
+      ]));
+    }
+  }
+
+  if (list.length && !state.currentSessionDoc) {
+    await loadSessionDetail(list[0].session_id);
+  }
+}
+
+async function openSessionDetail(sessionId) {
+  switchView('scan-details');
+  $('#detailSessionSelect').value = sessionId;
+  await loadSessionDetail(sessionId);
+}
+
+async function loadSessionDetail(sessionId) {
+  if (!sessionId) return;
+  try {
+    const doc = await apiFetch(`/api/scans/${encodeURIComponent(sessionId)}`);
+    state.currentSessionDoc = doc;
+
+    const metaWrap = $('#detailMetaContainer');
+    metaWrap.replaceChildren();
+    if (doc.status === 'running' && doc.progress) {
+      metaWrap.appendChild(el('div', { className: 'alert warn' }, [
+        `Scan ${sessionId} is currently running (${doc.progress.completed_modules}/${doc.progress.total_modules} modules completed).`,
+      ]));
+      return;
+    }
+
+    const sum = doc.summary || {};
+    metaWrap.appendChild(el('div', { className: 'kpi-grid' }, [
+      el('div', { className: 'kpi-card' }, [el('span', { textContent: 'Target & Type' }), el('strong', { textContent: `${doc.target} (${doc.target_type})` })]),
+      el('div', { className: 'kpi-card' }, [el('span', { textContent: 'Profile & Status' }), el('strong', { textContent: `${(doc.profile || '').toUpperCase()} · ${doc.status}` })]),
+      el('div', { className: 'kpi-card' }, [el('span', { textContent: 'Observations' }), el('strong', { textContent: `${sum.total_findings || 0} (${sum.confirmed_findings || 0} confirmed)` })]),
+      el('div', { className: 'kpi-card' }, [el('span', { textContent: 'Duration' }), el('strong', { textContent: `${doc.duration_seconds || 0}s` })]),
+    ]));
+
+    const tBody = $('#detailToolsBody');
+    tBody.replaceChildren();
+    const rawWrap = $('#detailRawOutputs');
+    rawWrap.replaceChildren();
+
+    for (const t of doc.tools || []) {
+      tBody.appendChild(el('tr', {}, [
+        el('td', {}, [el('strong', { textContent: t.tool })]),
+        el('td', { textContent: t.category }),
+        el('td', {}, [statusBadge(t.status)]),
+        el('td', { className: 'muted', textContent: t.traffic_mode }),
+        el('td', {}, [el('code', { textContent: t.exit_code !== null && t.exit_code !== undefined ? String(t.exit_code) : '—' })]),
+        el('td', { textContent: `${Number(t.duration_seconds || 0).toFixed(2)}s` }),
+        el('td', { textContent: String(t.findings_count || 0) }),
+        el('td', { className: 'muted', textContent: t.error || t.install_hint || 'OK' }),
+      ]));
+
+      const outText = t.stdout_preview || t.stderr_preview || 'No console output recorded.';
+      rawWrap.appendChild(el('div', { style: 'margin-bottom:12px;' }, [
+        el('div', { style: 'display:flex;justify-content:space-between;margin-bottom:4px;' }, [
+          el('strong', { textContent: `${t.category} — ${t.tool}` }),
+          statusBadge(t.status),
+        ]),
+        el('pre', { textContent: outText }),
+      ]));
+    }
+
+    renderDetailFindings();
+  } catch (err) {
+    $('#globalStatus').textContent = `Failed to load session: ${err.message}`;
+  }
+}
+
+function renderDetailFindings() {
+  const doc = state.currentSessionDoc;
+  const fBody = $('#detailFindingsBody');
+  fBody.replaceChildren();
+  if (!doc || !doc.findings) return;
+
+  const q = ($('#detailFilterText').value || '').toLowerCase().trim();
+  const conf = $('#detailFilterConf').value;
+
+  const filtered = doc.findings.filter((f) => {
+    if (conf && f.confidence !== conf) return false;
+    if (q) {
+      const hay = `${f.category} ${f.value} ${f.source_tool} ${f.detail}`.toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  if (!filtered.length) {
+    fBody.appendChild(el('tr', {}, [el('td', { colspan: '7', className: 'muted', textContent: 'No findings match the current filter.' })]));
+    return;
+  }
+
+  for (const f of filtered) {
+    fBody.appendChild(el('tr', {}, [
+      el('td', {}, [el('code', { textContent: f.category })]),
+      el('td', {}, [el('strong', { textContent: f.value })]),
+      el('td', {}, [el('code', { textContent: f.classification || 'normalised_finding' })]),
+      el('td', {}, [confBadge(f.confidence)]),
+      el('td', {}, [sevBadge(f.severity)]),
+      el('td', { textContent: f.source_tool }),
+      el('td', { className: 'muted', textContent: `${f.detail || ''} ${f.remediation ? ' | Remediation: ' + f.remediation : ''}` }),
+    ]));
+  }
+}
+
+$('#detailSessionSelect').addEventListener('change', (e) => loadSessionDetail(e.target.value));
+$('#detailFilterText').addEventListener('input', renderDetailFindings);
+$('#detailFilterConf').addEventListener('change', renderDetailFindings);
+$('#detailExportHtml').addEventListener('click', () => state.currentSessionDoc && downloadExport(state.currentSessionDoc.session_id, 'html'));
+$('#detailExportJson').addEventListener('click', () => state.currentSessionDoc && downloadExport(state.currentSessionDoc.session_id, 'json'));
+$('#detailExportCsv').addEventListener('click', () => state.currentSessionDoc && downloadExport(state.currentSessionDoc.session_id, 'csv'));
+
+function getScanFormPayload() {
+  const selectedMods = $$('.mod-group-cb:checked').map((cb) => cb.value);
+  const rawScope = $('#scanScope').value.trim();
+  return {
+    target: $('#scanTarget').value.trim(),
+    scope: rawScope ? rawScope.split(',').map((s) => s.trim()).filter(Boolean) : [],
+    profile: $('#scanProfile').value,
+    modules: selectedMods,
+    authorize_active: $('#scanAuthActive').checked,
+    timeout: Number($('#scanTimeout').value) || 90,
+    concurrency: Number($('#scanConcurrency').value) || 2,
+    rate_limit: Number($('#scanRate').value) || 5,
+  };
+}
+
+$('#scanProfile').addEventListener('change', (e) => {
+  const defaults = {
+    low: { timeout: 90, concurrency: 2, rate: 5 },
+    medium: { timeout: 180, concurrency: 3, rate: 15 },
+    high: { timeout: 300, concurrency: 4, rate: 25 },
+  }[e.target.value];
+  if (defaults) {
+    $('#scanTimeout').value = defaults.timeout;
+    $('#scanConcurrency').value = defaults.concurrency;
+    $('#scanRate').value = defaults.rate;
+  }
+});
+
+$('#previewScanBtn').addEventListener('click', async () => {
+  const box = $('#scanPreviewBox');
+  box.className = 'alert';
+  box.textContent = 'Validating target & scope...';
+  try {
+    const res = await apiFetch('/api/scans/preview', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(getScanFormPayload()),
+    });
+    box.className = res.ready_to_execute ? 'alert ok' : 'alert warn';
+    box.replaceChildren(
+      el('div', {}, [el('strong', { textContent: `Normalised Target: ${res.target.host} (${res.target.target_type})` })]),
+      el('div', { textContent: `Effective Scope: ${res.effective_scope.join(', ')}` }),
+      el('div', { textContent: `Profile: ${res.profile.toUpperCase()} — ${res.policy.description}` }),
+      res.policy.warning ? el('div', { className: 'gold-text', textContent: `Warning: ${res.policy.warning}` }) : null,
+      el('div', { textContent: `Planned Modules (${res.planned_modules.length}): ${res.planned_modules.map((m) => m.name).join(', ')}` }),
+      res.skipped_by_target_type.length ? el('div', { className: 'muted', textContent: `Skipped for target type '${res.target.target_type}': ${res.skipped_by_target_type.join(', ')}` }) : null,
+      !res.ready_to_execute
+        ? el('div', { style: 'margin-top:6px;font-weight:700;', textContent: `Action Required: Active modules (${res.active_modules_selected.join(', ')}) require checking the 'Confirm explicit written authorisation' box.` })
+        : el('div', { style: 'margin-top:6px;font-weight:700;', textContent: 'Ready to execute within authorised scope.' })
+    );
+  } catch (err) {
+    box.className = 'alert err';
+    box.textContent = `Validation Error: ${err.message}`;
+  }
+});
+
+$('#newScanForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const out = $('#scanExecutionResult');
+  const btn = $('#launchScanBtn');
+  btn.disabled = true;
+  out.replaceChildren(el('div', { className: 'alert warn', textContent: 'Executing reconnaissance modules... Please wait.' }));
+  try {
+    const payload = { ...getScanFormPayload(), confirm_execution: true, run_async: false };
+    const report = await apiFetch('/api/scans', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    out.replaceChildren(
+      el('div', { className: 'alert ok' }, [
+        el('strong', { textContent: `Scan Completed: ${report.session_id} (${report.status.toUpperCase()})` }),
+        el('div', { textContent: `Observations extracted: ${report.summary.total_findings} (${report.summary.confirmed_findings} confirmed)` }),
+        el('button', {
+          className: 'btn secondary',
+          style: 'margin-top:10px;',
+          textContent: 'Open Full Scan Details & Reports',
+          onclick: async () => {
+            await loadOverview();
+            await openSessionDetail(report.session_id);
+          },
+        }),
+      ])
+    );
+    await loadOverview();
+  } catch (err) {
+    out.replaceChildren(el('div', { className: 'alert err', textContent: `Scan Blocked / Failed: ${err.message}` }));
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+async function loadIntelligence(kind) {
+  try {
+    const data = await apiFetch(`/api/intelligence/${kind}`);
+    if (kind === 'domain') {
+      state.domainIntel = data.items || [];
+      renderDomainIntel();
+    } else if (kind === 'network') {
+      state.networkIntel = data.items || [];
+      renderNetworkIntel();
+    } else if (kind === 'web') {
+      state.webIntel = data.items || [];
+      renderWebIntel();
+    }
+  } catch (err) {
+    $('#globalStatus').textContent = `Failed to load ${kind} intelligence: ${err.message}`;
+  }
+}
+
+function renderDomainIntel() {
+  const body = $('#domainIntelBody');
+  body.replaceChildren();
+  const q = ($('#domainFilterInput').value || '').toLowerCase().trim();
+  const items = state.domainIntel.filter((i) => !q || `${i.target} ${i.value} ${i.category} ${i.source_tool}`.toLowerCase().includes(q));
+  if (!items.length) {
+    body.appendChild(el('tr', {}, [el('td', { colspan: '8', className: 'muted', textContent: 'No domain or DNS observations found.' })]));
+    return;
+  }
+  for (const i of items) {
+    body.appendChild(el('tr', {}, [
+      el('td', {}, [el('strong', { textContent: i.target })]),
+      el('td', {}, [el('code', { textContent: i.category })]),
+      el('td', { textContent: i.value }),
+      el('td', {}, [confBadge(i.confidence)]),
+      el('td', {}, [sevBadge(i.severity)]),
+      el('td', { textContent: i.source_tool }),
+      el('td', { className: 'muted', textContent: (i.timestamp || i.session_started_at || '').slice(0, 19) }),
+      el('td', { className: 'muted', textContent: i.detail }),
+    ]));
+  }
+}
+
+function renderNetworkIntel() {
+  const body = $('#networkIntelBody');
+  body.replaceChildren();
+  const q = ($('#networkFilterInput').value || '').toLowerCase().trim();
+  const items = state.networkIntel.filter((i) => !q || `${i.target} ${i.value} ${i.detail} ${i.source_tool}`.toLowerCase().includes(q));
+  if (!items.length) {
+    body.appendChild(el('tr', {}, [el('td', { colspan: '8', className: 'muted', textContent: 'No network or open-port observations found.' })]));
+    return;
+  }
+  for (const i of items) {
+    body.appendChild(el('tr', {}, [
+      el('td', {}, [el('strong', { textContent: i.target })]),
+      el('td', {}, [el('code', { textContent: i.category })]),
+      el('td', {}, [el('strong', { textContent: i.value })]),
+      el('td', {}, [el('code', { textContent: i.classification || 'normalised_finding' })]),
+      el('td', {}, [confBadge(i.confidence)]),
+      el('td', {}, [sevBadge(i.severity)]),
+      el('td', { textContent: i.source_tool }),
+      el('td', { className: 'muted', textContent: i.detail }),
+    ]));
+  }
+}
+
+function renderWebIntel() {
+  const body = $('#webIntelBody');
+  body.replaceChildren();
+  const q = ($('#webFilterInput').value || '').toLowerCase().trim();
+  const items = state.webIntel.filter((i) => !q || `${i.target} ${i.value} ${i.category} ${i.detail}`.toLowerCase().includes(q));
+  if (!items.length) {
+    body.appendChild(el('tr', {}, [el('td', { colspan: '8', className: 'muted', textContent: 'No web, WAF, CMS, or TLS observations found.' })]));
+    return;
+  }
+  for (const i of items) {
+    body.appendChild(el('tr', {}, [
+      el('td', {}, [el('strong', { textContent: i.target })]),
+      el('td', {}, [el('code', { textContent: i.category })]),
+      el('td', { textContent: i.value }),
+      el('td', {}, [el('code', { textContent: i.classification || 'normalised_finding' })]),
+      el('td', {}, [confBadge(i.confidence)]),
+      el('td', {}, [sevBadge(i.severity)]),
+      el('td', { textContent: i.source_tool }),
+      el('td', { className: 'muted', textContent: `${i.detail || ''} ${i.remediation ? ' | Remediation: ' + i.remediation : ''}` }),
+    ]));
+  }
+}
+
+$('#domainFilterInput').addEventListener('input', renderDomainIntel);
+$('#networkFilterInput').addEventListener('input', renderNetworkIntel);
+$('#webFilterInput').addEventListener('input', renderWebIntel);
+
+$('#runDiffBtn').addEventListener('click', async () => {
+  const baseId = $('#diffBaseSelect').value;
+  const targetId = $('#diffTargetSelect').value;
+  const wrap = $('#diffResultContainer');
+  if (!baseId || !targetId) {
+    wrap.replaceChildren(el('div', { className: 'alert warn', textContent: 'Select two scan sessions to compare.' }));
+    return;
+  }
+  try {
+    const diff = await apiFetch(`/api/compare?base_id=${encodeURIComponent(baseId)}&target_id=${encodeURIComponent(targetId)}`);
+    const sum = diff.summary;
+    wrap.replaceChildren(
+      el('div', { className: 'alert ok' }, [
+        el('strong', { textContent: `Comparison Summary (${diff.baseline_session} -> ${diff.current_session}): ` }),
+        `+${sum.added_count} Added · -${sum.removed_count} Removed · ~${sum.changed_count} Changed · =${sum.unchanged_count} Unchanged`,
+      ]),
+      el('pre', { textContent: JSON.stringify(diff, null, 2) })
+    );
+  } catch (err) {
+    wrap.replaceChildren(el('div', { className: 'alert err', textContent: `Comparison failed: ${err.message}` }));
+  }
+});
+
+async function loadSettings() {
+  try {
+    const data = await apiFetch('/api/settings');
+    state.settings = data;
+    const c = data.config;
+    $('#setOutputDir').value = c.output_dir || 'om_reports';
+    $('#setProfile').value = c.profile || 'low';
+    $('#setConcurrency').value = c.concurrency || 2;
+    $('#setTimeout').value = c.timeout || 90;
+    $('#setRateLimit').value = c.rate_limit || 5;
+    $('#setRetentionDays').value = c.retention_days || 90;
+    $('#setMaxSessions').value = c.max_sessions || 250;
+    $('#setWordlist').value = c.wordlist || '';
+    $('#setArchiveZip').checked = Boolean(c.archive_zip);
+
+    const mBody = $('#settingsModulesBody');
+    mBody.replaceChildren();
+    for (const m of data.modules || []) {
+      mBody.appendChild(el('tr', {}, [
+        el('td', {}, [el('strong', { textContent: m.name })]),
+        el('td', {}, [el('code', { textContent: m.module_group })]),
+        el('td', { textContent: m.installed ? `${m.path} (${m.version || 'installed'})` : 'Not Installed' }),
+        el('td', {}, [el('code', { textContent: m.apt_hint })]),
+      ]));
+    }
+  } catch (err) {
+    $('#settingsStatusBox').replaceChildren(el('div', { className: 'alert err', textContent: err.message }));
+  }
+}
+
+$('#settingsForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const box = $('#settingsStatusBox');
+  try {
+    const payload = {
+      output_dir: $('#setOutputDir').value.trim(),
+      profile: $('#setProfile').value,
+      concurrency: Number($('#setConcurrency').value),
+      timeout: Number($('#setTimeout').value),
+      rate_limit: Number($('#setRateLimit').value),
+      retention_days: Number($('#setRetentionDays').value),
+      max_sessions: Number($('#setMaxSessions').value),
+      wordlist: $('#setWordlist').value.trim(),
+      archive_zip: $('#setArchiveZip').checked,
+    };
+    await apiFetch('/api/settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    box.replaceChildren(el('div', { className: 'alert ok', textContent: 'Configuration validated and saved.' }));
+    await loadOverview();
+  } catch (err) {
+    box.replaceChildren(el('div', { className: 'alert err', textContent: `Validation failed: ${err.message}` }));
+  }
+});
+
+$('#refreshBtn').addEventListener('click', () => loadOverview());
+loadOverview();
+</script>
+</body>
+</html>

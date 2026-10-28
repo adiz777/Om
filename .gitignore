@@ -1,0 +1,38 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Packaging & build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Test & linter caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Local scan reports, databases, and archives (never commit target scan data)
+om_reports/
+OM_Recon_*/
+*.zip
+*.db
+*.db-shm
+*.db-wal
+sentinel/data/
+
+# Environment variables & secrets
+.env
+*.env
+!.env.example
+sentinel/.env
